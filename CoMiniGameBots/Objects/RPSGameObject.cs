@@ -1,5 +1,7 @@
 ﻿using CoMiniGameBots.MiniGames.RockPaperScissors;
 using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,16 +13,20 @@ namespace CoMiniGameBots.Objects
         private RPSPlayerGameObject PlayerTwo;
         private RPSPlayerGameObject PlayerOne;
         private bool GameActive = false;
+        private ISocketMessageChannel StartedChannel;
         private int MatchID = RPSGameDataClass.GameID;
-        public RPSGameObject(RPSPlayerGameObject P1, RPSPlayerGameObject P2)
+        private string Winner = null;
+        public RPSGameObject(RPSPlayerGameObject P1, RPSPlayerGameObject P2, ISocketMessageChannel channel)
         {
             PlayerOne = P1;
             PlayerTwo = P2;
             RPSGameDataClass.GameID++;
+            GameActive = true;
+            StartedChannel = channel;
         }
-        public RPSGameObject()
+        public RPSGameObject(string win)
         {
-            RPSGameDataClass.GameID++;
+            Winner = win;
         }
         public RPSPlayerGameObject POne
         {
@@ -37,6 +43,10 @@ namespace CoMiniGameBots.Objects
         public int ID
         {
             get { return MatchID; }
+        }
+        public ISocketMessageChannel GameChannel
+        {
+            get { return StartedChannel; }
         }
     }
 }

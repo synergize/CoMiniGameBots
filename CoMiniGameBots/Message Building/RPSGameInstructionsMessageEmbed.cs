@@ -18,20 +18,20 @@ namespace CoMiniGameBots.Message_Building
             RPSBuilder.AddField("Instructions: ", "Reply directly to me what your submission is I'll list the possible submissions below!", false);
             RPSBuilder.AddField("Rock: ", "!shoot rock", false);
             RPSBuilder.AddField("Paper: ", "!shoot paper", false);
-            RPSBuilder.AddField("Scissors: ", "!shoot scissor", false);
+            RPSBuilder.AddField("Scissors: ", "!shoot scissors", false);
 
             return RPSBuilder;
         }
-        private static IUser DeterminePlayer(IUser user)
-        {
-            if (user.Id == RPSGameDataClass.POne.Id)
-            {
-                return RPSGameDataClass.PTwo;
-            }
-            else
-            {
-                return RPSGameDataClass.POne;
-            }
-        }
+        //private static IUser DeterminePlayer(IUser user)
+        //{
+        //    if (user.Id == RPSGameDataClass.POne.Id)
+        //    {
+        //        return RPSGameDataClass.PTwo;
+        //    }
+        //    else
+        //    {
+        //        return RPSGameDataClass.POne;
+        //    }
+        //}
     }
 }

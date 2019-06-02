@@ -1,4 +1,6 @@
-﻿using CoMiniGameBots.Objects;
+﻿using CoMiniGameBots.Message_Building;
+using CoMiniGameBots.MiniGames.RockPaperScissors;
+using CoMiniGameBots.Objects;
 using CoMiniGameBots.Static_Data;
 using Discord;
 using Discord.Commands;
@@ -59,7 +61,35 @@ namespace CoMiniGameBots
 
             if (RPSCheck == "!shoot rock" || RPSCheck == "!shoot paper" || RPSCheck == "!shoot scissor")
             {
-                Console.WriteLine("RPS Message Recieved");
+                RPSGameRun Entry = new RPSGameRun();
+
+                var Results = Entry.GetPlayerEntry(Context.User, RPSCheck);
+                if (Results == null)
+                {
+                    await Context.Channel.SendMessageAsync("Waiting on your opponent!");
+                    return;
+                }
+                if (Results.POne.IsWinner == true)
+                {
+                    await Results.GameChannel.SendMessageAsync(null, false, AnnouceWinnerMessageEmbed.RPSWinner(Results.POne).Build());
+                    return;
+                }
+                else if (Results.PTwo.IsWinner == true)
+                {
+                    await Results.GameChannel.SendMessageAsync(null, false, AnnouceWinnerMessageEmbed.RPSWinner(Results.PTwo).Build());
+                    return;
+                }
+                else if (Results.POne.IsWinner == false && Results.PTwo.IsWinner == false && Results.POne.Choice != null && Results.PTwo.Choice != null)
+                {
+                    await Results.GameChannel.SendMessageAsync("Draw!");
+                    return;
+                }
+                else
+                {
+                    await Context.Channel.SendMessageAsync(null, false, WaitingPlayerMessageEmbed.WaitingForOpponent().Build());
+                    return;
+                }
+
                 return;
             }
 
@@ -72,7 +102,7 @@ namespace CoMiniGameBots
         }
         private async Task Client_Ready()
         {
-            await Client.SetGameAsync("!coHelp for details!", "https://discordapp.com/developers", ActivityType.Playing);
+            await Client.SetGameAsync("!rpshelp for details!", "https://discordapp.com/developers", ActivityType.Playing);
         }
 
         //If someone adds a reaction, run x code. 
@@ -80,19 +110,6 @@ namespace CoMiniGameBots
         {
             //If a bot sends the reaction, disregard. 
             if (((SocketUser)Reaction.User).IsBot) return;
-        }
-
-        private string DetermineWinner(RPSGameObject Game)
-        {
-            if (Game.POne.Choice == Game.PTwo.Choice) return "Draw!";
-            if ((Game.POne.Choice == "scissor" && Game.PTwo.Choice == "paper") ||
-                (Game.POne.Choice == "paper" && Game.PTwo.Choice == "rock") ||
-                (Game.POne.Choice == "rock" && Game.PTwo.Choice == "scissor"))
-                return $"{Game.POne.User.Mention} Won!";
-            else
-            {
-                return $"{Game.PTwo.User.Mention} Won!";
-            }
         }
     }
 }

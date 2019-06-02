@@ -9,6 +9,7 @@ namespace CoMiniGameBots.Objects
     {
         private IUser GuildUser { get; set; }
         private string PlayerEntry = null;
+        private bool Winner = false;
         public RPSPlayerGameObject(IUser user, string entry = null)
         {
             GuildUser = user;
@@ -23,6 +24,11 @@ namespace CoMiniGameBots.Objects
         public IUser User
         {
             get { return GuildUser; }
+        }
+        public bool IsWinner
+        {
+            get { return Winner; }
+            set { Winner = value; }
         }
     }
 }

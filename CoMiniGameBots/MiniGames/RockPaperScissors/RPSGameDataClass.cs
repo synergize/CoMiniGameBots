@@ -8,19 +8,19 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
 {
     static class RPSGameDataClass
     {
-        private static IUser PlayerOne;
-        private static IUser PlayerTwo;
+        private static RPSPlayerGameObject PlayerOne;
+        private static RPSPlayerGameObject PlayerTwo;
         private static bool PlayBegin = false;
         private static bool PlayerWating = false;
         private static int ID = 0;
         private static List<RPSGameObject> ListOfGames = new List<RPSGameObject>();
 
-        public static IUser POne
+        public static RPSPlayerGameObject POne
         {
             get { return PlayerOne; }
             set { PlayerOne = value; }
         }
-        public static IUser PTwo
+        public static RPSPlayerGameObject PTwo
         {
             get { return PlayerTwo ; }
             set { PlayerTwo = value; }
