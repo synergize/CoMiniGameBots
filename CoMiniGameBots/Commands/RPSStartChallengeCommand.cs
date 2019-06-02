@@ -18,8 +18,7 @@ namespace CoMiniGameBots.Commands
             SocketUser P1 = Context.User;         
             if (CheckIfPlayerPlaying(P1, P2))
             {
-                MessagePlayer(P1);
-                MessagePlayer(P2);
+                MessagePlayers(P1, P2);
                 RPSGameRun Game = new RPSGameRun();
                 Game.GameRun(P1, P2, Context.Channel);
             }
@@ -28,16 +27,22 @@ namespace CoMiniGameBots.Commands
                 await Context.Channel.SendMessageAsync("Player Already Playing");
             }
         }
-        private async void MessagePlayer(IUser user)
+        private async void MessagePlayers(IUser P1, IUser P2)
         {
-            await user.SendMessageAsync(null, false, RPSGameInstructionsMessageEmbed.RPSPlayerInstructions().Build());
+            await P1.SendMessageAsync(null, false, RPSGameInstructionsMessageEmbed.RPSChallengingPlayerInstructions(P2).Build());
+            await P2.SendMessageAsync(null, false, RPSGameInstructionsMessageEmbed.RPSChallengedPlayerInstructions(P1).Build());
         }
         private bool CheckIfPlayerPlaying(IUser P1, IUser P2)
         {
             foreach (var item in RPSGameDataClass.ActiveGames)
             {
                 if (item.POne.User == P1 || item.PTwo.User == P1 || item.POne.User == P2 || item.PTwo.User == P2)
-                {
+                {        
+                    if (item.StartTime.AddMinutes(5) < DateTime.UtcNow)
+                    {
+                        RPSGameDataClass.ActiveGames.Remove(item);
+                        return true;
+                    }
                     return false;
                 }
                 else

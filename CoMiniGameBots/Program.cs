@@ -59,7 +59,7 @@ namespace CoMiniGameBots
             if (Context.Message == null || Context.Message.Content == "") return;
             if (Context.User.IsBot) return;
 
-            if (RPSCheck == "!shoot rock" || RPSCheck == "!shoot paper" || RPSCheck == "!shoot scissor")
+            if (RPSCheck == "!shoot rock" || RPSCheck == "!shoot paper" || RPSCheck == "!shoot scissors")
             {
                 RPSGameRun Entry = new RPSGameRun();
 
