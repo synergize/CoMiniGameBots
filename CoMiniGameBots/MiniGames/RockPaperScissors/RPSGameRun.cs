@@ -1,5 +1,6 @@
 ﻿using CoMiniGameBots.Commands;
 using CoMiniGameBots.Message_Building;
+using CoMiniGameBots.MiniGames.RockPaperScissors.Stats;
 using CoMiniGameBots.Objects;
 using Discord;
 using Discord.Commands;
@@ -35,7 +36,7 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
                 {
                     if (item.POne.User.Id == user.Id)
                     {
-                        item.POne.Choice = play;
+                        item.POne.Choice = play;                        
                     }
                     else
                     {
@@ -43,7 +44,12 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
                     }
                     if (item.PTwo.Choice != null && item.POne.Choice != null)
                     {
+                        StatJsonController Save = new StatJsonController();
+                        PopulateStatObject Populate = new PopulateStatObject();
                         var Winner = DetermineWinner(item);
+                        RPSGameDataClass.PlayerStatsList.Add(Winner.POne);
+                        RPSGameDataClass.PlayerStatsList.Add(Winner.PTwo);
+                        Save.SaveStatsJson(Populate.SetPlayerStats(RPSGameDataClass.PlayerStatsList));
                         RPSGameDataClass.ActiveGames.Remove(item);
                         return Winner;
                     }

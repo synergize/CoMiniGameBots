@@ -1,0 +1,86 @@
+﻿using CoMiniGameBots.Objects;
+using CoMiniGameBots.Static_Data;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+
+namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
+{
+    public class StatJsonController
+    {
+        public void SaveStatsJson(List<RPSPlayerStatsDataModel> ListStats)
+        {
+            foreach (var item in ListStats)
+            {
+                string FilePath = FilePaths.BuildFilePath($"{item.DiscordID}.json");
+                var ReadFile = ReadStatsJson(item.DiscordID);
+                if (ReadFile == null)
+                {
+                    using (StreamWriter file = File.CreateText(FilePath))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        serializer.Formatting = Formatting.Indented;
+                        serializer.Serialize(file, item);
+                    }
+                }
+                else
+                {
+                    using (StreamWriter file = File.CreateText(FilePath))
+                    {
+                        PopulateStatObject Convert = new PopulateStatObject();
+                        JsonSerializer serializer = new JsonSerializer();
+                        serializer.Formatting = Formatting.Indented;
+                        serializer.Serialize(file, UpdateStatsJson(ReadFile, item));
+                    }
+                }
+            }
+
+        }
+        private RPSPlayerStatsDataModel ReadStatsJson(ulong DiscordID)
+        {
+            RPSPlayerStatsDataModel obj = new RPSPlayerStatsDataModel();
+            string FilePath = FilePaths.BuildFilePath($"{DiscordID}.json");
+            if (CheckFileExists(FilePath))
+            {
+                JsonConvert.PopulateObject(FilePath, obj);
+                return obj;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        private bool CheckFileExists(string FilePath)
+        {
+            string newDir = FilePaths.DataDirectory;
+            if (!Directory.Exists(newDir))
+            {
+                DirectoryInfo dir = Directory.CreateDirectory(newDir);
+            }
+            if (!File.Exists(FilePath))
+            {
+                var SteamIDJson = File.Create(FilePath);
+                SteamIDJson.Close();
+                return false;
+            }
+            else
+            {
+                return true;
+            }            
+        }
+        private RPSPlayerStatsDataModel UpdateStatsJson(RPSPlayerStatsDataModel InfoFromFile, RPSPlayerStatsDataModel NewInfo)
+        {
+            InfoFromFile.Name = NewInfo.Name;
+            InfoFromFile.Stats.NumberLosses += NewInfo.Stats.NumberLosses;
+            InfoFromFile.Stats.NumberPaper += NewInfo.Stats.NumberPaper;
+            InfoFromFile.Stats.NumberRocks += NewInfo.Stats.NumberRocks;
+            InfoFromFile.Stats.NumberScissors += NewInfo.Stats.NumberScissors;
+            InfoFromFile.Stats.NumberWins += NewInfo.Stats.NumberWins;
+
+            return InfoFromFile;
+        }
+
+    }
+}

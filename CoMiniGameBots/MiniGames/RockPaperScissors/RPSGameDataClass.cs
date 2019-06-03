@@ -14,6 +14,7 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
         private static bool PlayerWating = false;
         private static int ID = 0;
         private static List<RPSGameObject> ListOfGames = new List<RPSGameObject>();
+        private static List<RPSPlayerGameObject> ListOfStats = new List<RPSPlayerGameObject>();
 
         public static RPSPlayerGameObject POne
         {
@@ -44,6 +45,11 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
         {
             get { return ID; }
             set { ID = value; }
+        }
+        public static List<RPSPlayerGameObject> PlayerStatsList
+        {
+            get { return ListOfStats; }
+            set { ListOfStats = value; }
         }
 
     }

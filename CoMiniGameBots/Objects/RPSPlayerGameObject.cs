@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CoMiniGameBots.Objects
 {
-    class RPSPlayerGameObject
+    public class RPSPlayerGameObject
     {
         private IUser GuildUser { get; set; }
         private string PlayerEntry = null;

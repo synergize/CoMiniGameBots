@@ -12,10 +12,12 @@ namespace CoMiniGameBots.Objects
     {
         private RPSPlayerGameObject PlayerTwo;
         private RPSPlayerGameObject PlayerOne;
+
         private bool GameActive = false;
         private ISocketMessageChannel StartedChannel;
         private int MatchID = RPSGameDataClass.GameID;
         private string Winner = null;
+        private string Loser = null;
         private DateTime TimeStarted;
         public RPSGameObject(RPSPlayerGameObject P1, RPSPlayerGameObject P2, ISocketMessageChannel channel)
         {
