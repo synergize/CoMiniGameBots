@@ -76,12 +76,12 @@ namespace CoMiniGameBots
                 }
                 if (Results.POne.IsWinner == true)
                 {
-                    await Results.GameChannel.SendMessageAsync(null, false, AnnouceWinnerMessageEmbed.RPSWinner(Results.POne).Build());
+                    await Results.GameChannel.SendMessageAsync(null, false, AnnouceWinnerMessageEmbed.RPSWinner(Results.POne, Results.PTwo).Build());
                     return;
                 }
                 else if (Results.PTwo.IsWinner == true)
                 {
-                    await Results.GameChannel.SendMessageAsync(null, false, AnnouceWinnerMessageEmbed.RPSWinner(Results.PTwo).Build());
+                    await Results.GameChannel.SendMessageAsync(null, false, AnnouceWinnerMessageEmbed.RPSWinner(Results.PTwo, Results.POne).Build());
                     return;
                 }
                 else if (Results.POne.IsWinner == false && Results.PTwo.IsWinner == false && Results.POne.Choice != null && Results.PTwo.Choice != null)
