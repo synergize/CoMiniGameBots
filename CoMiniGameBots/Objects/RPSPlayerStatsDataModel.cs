@@ -18,6 +18,7 @@ namespace CoMiniGameBots.Objects
             public int NumberRocks { get; set; }
             public int NumberPaper { get; set; }
             public int NumberScissors { get; set; }
+            public int NumberDraws { get; set; }
         }
         
     }

@@ -58,9 +58,14 @@ namespace CoMiniGameBots
 
             if (Context.Message == null || Context.Message.Content == "") return;
             if (Context.User.IsBot) return;
-
-            if (RPSCheck == "!shoot rock" || RPSCheck == "!shoot paper" || RPSCheck == "!shoot scissors")
+            if (RPSCheck == "!rock" || RPSCheck == "!paper" || RPSCheck == "!scissors")
             {
+                if (!CheckGames(Context.User))
+                {
+                    await Context.Channel.SendMessageAsync(null, false,
+                        PlayerNoActiveGamesEmbed.RPSPlayerNeeded(Context.User).Build());
+                    return;
+                }
                 RPSGameRun Entry = new RPSGameRun();
 
                 var Results = Entry.GetPlayerEntry(Context.User, RPSCheck);
@@ -89,8 +94,7 @@ namespace CoMiniGameBots
                     await Context.Channel.SendMessageAsync(null, false, WaitingPlayerMessageEmbed.WaitingForOpponent().Build());
                     return;
                 }
-
-                return;
+                
             }
 
             int ArgPos = 0;
@@ -110,6 +114,22 @@ namespace CoMiniGameBots
         {
             //If a bot sends the reaction, disregard. 
             if (((SocketUser)Reaction.User).IsBot) return;
+        }
+
+        private bool CheckGames(IUser user)
+        {
+            foreach (var ActiveGame in RPSGameDataClass.ActiveGames)
+            {
+                if (ActiveGame.POne.User.Id == user.Id || ActiveGame.PTwo.User.Id == user.Id)
+                {
+                    if (ActiveGame.IsActive)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

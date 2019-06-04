@@ -30,8 +30,9 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
         }
         public RPSGameObject GetPlayerEntry(IUser user, string play)
         {
-            foreach (var item in RPSGameDataClass.ActiveGames)
+            for (int i = 0; i < RPSGameDataClass.ActiveGames.Count; i++)
             {
+                var item = RPSGameDataClass.ActiveGames[i];
                 if (item.IsActive == true)
                 {
                     if (item.POne.User.Id == user.Id)
@@ -49,8 +50,8 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
                         var Winner = DetermineWinner(item);
                         RPSGameDataClass.PlayerStatsList.Add(Winner.POne);
                         RPSGameDataClass.PlayerStatsList.Add(Winner.PTwo);
-                        Save.SaveStatsJson(Populate.SetPlayerStats(RPSGameDataClass.PlayerStatsList));
-                        RPSGameDataClass.ActiveGames.Remove(item);
+                        item.IsActive = false;
+                        Save.SaveStatsJson(Populate.SetPlayerStats(RPSGameDataClass.ActiveGames));
                         return Winner;
                     }
                     return item;

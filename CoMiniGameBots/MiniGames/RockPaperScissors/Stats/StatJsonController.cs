@@ -20,8 +20,10 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
                 {
                     using (StreamWriter file = File.CreateText(FilePath))
                     {
-                        JsonSerializer serializer = new JsonSerializer();
-                        serializer.Formatting = Formatting.Indented;
+                        var serializer = new JsonSerializer
+                        {
+                            Formatting = Formatting.Indented
+                        };
                         serializer.Serialize(file, item);
                     }
                 }
@@ -30,13 +32,14 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
                     using (StreamWriter file = File.CreateText(FilePath))
                     {
                         PopulateStatObject Convert = new PopulateStatObject();
-                        JsonSerializer serializer = new JsonSerializer();
-                        serializer.Formatting = Formatting.Indented;
+                        var serializer = new JsonSerializer
+                        {
+                            Formatting = Formatting.Indented
+                        };
                         serializer.Serialize(file, UpdateStatsJson(ReadFile, item));
                     }
                 }
             }
-
         }
         private RPSPlayerStatsDataModel ReadStatsJson(ulong DiscordID)
         {
@@ -44,7 +47,8 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
             string FilePath = FilePaths.BuildFilePath($"{DiscordID}.json");
             if (CheckFileExists(FilePath))
             {
-                JsonConvert.PopulateObject(FilePath, obj);
+                obj = JsonConvert.DeserializeObject<RPSPlayerStatsDataModel>(File.ReadAllText(FilePath));
+
                 return obj;
             }
             else

@@ -16,9 +16,9 @@ namespace CoMiniGameBots.Message_Building
             RPSBuilder.WithColor(4124426);
             RPSBuilder.WithFooter("Contact Coaction#5994 for any issues. This is a work in progress.");
             RPSBuilder.AddField("Instructions: ", "Reply directly to me what your submission is. You have five minutes to respond. Otherwise I'll time out!", false);
-            RPSBuilder.AddField("Rock: ", "!shoot rock", false);
-            RPSBuilder.AddField("Paper: ", "!shoot paper", false);
-            RPSBuilder.AddField("Scissors: ", "!shoot scissors", false);
+            RPSBuilder.AddField("Rock: ", "!rock", false);
+            RPSBuilder.AddField("Paper: ", "!paper", false);
+            RPSBuilder.AddField("Scissors: ", "!scissors", false);
 
             return RPSBuilder;
         }
@@ -30,9 +30,9 @@ namespace CoMiniGameBots.Message_Building
             RPSBuilder.WithColor(4124426);
             RPSBuilder.WithFooter("Contact Coaction#5994 for any issues. This is a work in progress.");
             RPSBuilder.AddField("Instructions: ", "Reply directly to me what your submission is. You have five minutes to respond. Otherwise I'll time out!", false);
-            RPSBuilder.AddField("Rock: ", "!shoot rock", false);
-            RPSBuilder.AddField("Paper: ", "!shoot paper", false);
-            RPSBuilder.AddField("Scissors: ", "!shoot scissors", false);
+            RPSBuilder.AddField("Rock: ", "!rock", false);
+            RPSBuilder.AddField("Paper: ", "!paper", false);
+            RPSBuilder.AddField("Scissors: ", "!scissors", false);
 
             return RPSBuilder;
         }
