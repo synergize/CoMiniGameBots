@@ -4,18 +4,21 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace CoMiniGameBots.Objects
 {
-    class RPSGameObject
+    public class RPSGameObject
     {
         private RPSPlayerGameObject PlayerTwo;
         private RPSPlayerGameObject PlayerOne;
+
         private bool GameActive = false;
         private ISocketMessageChannel StartedChannel;
         private int MatchID = RPSGameDataClass.GameID;
         private string Winner = null;
+        private string Loser = null;
         private DateTime TimeStarted;
         public RPSGameObject(RPSPlayerGameObject P1, RPSPlayerGameObject P2, ISocketMessageChannel channel)
         {
@@ -30,6 +33,11 @@ namespace CoMiniGameBots.Objects
         {
             Winner = win;
         }
+
+        public RPSGameObject()
+        {
+
+        }
         public RPSPlayerGameObject POne
         {
             get { return PlayerOne; }
@@ -41,6 +49,7 @@ namespace CoMiniGameBots.Objects
         public bool IsActive
         {
             get { return GameActive; }
+            set { GameActive = value; }
         }
         public int ID
         {

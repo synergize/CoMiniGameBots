@@ -4,21 +4,21 @@ using System.Text;
 
 namespace CoMiniGameBots.Objects
 {
-    class RPSPlayerDataModel
+    public class RPSPlayerStatsDataModel
     {
-        class Player
-        {
+
             public string Name { get; set; }
             public ulong DiscordID { get; set; }
-            public Stats Stats { get; set; }
-        }
-        class Stats
+            public PlayerStats Stats { get; set; }
+        
+        public class PlayerStats
         {
             public int NumberWins { get; set; }
             public int NumberLosses { get; set; }
             public int NumberRocks { get; set; }
             public int NumberPaper { get; set; }
             public int NumberScissors { get; set; }
+            public int NumberDraws { get; set; }
         }
         
     }
