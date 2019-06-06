@@ -35,13 +35,17 @@ namespace CoMiniGameBots.Message_Building
             }
             if (Paper > Rocks && Paper > Scissors)
             {
-                return "sou can make a lot of airplanes with that paper usage!";
+                return "you can make a lot of airplanes with that paper usage!";
             }
             if (Scissors > Paper && Scissors > Rocks)
             {
                 return "sever run with so many scissors!";
             }
-            return "I've discovered your stats.. or lack there of!";
+            if (Rocks == 0 && Scissors == 0 && Paper == 0)
+            {
+                return "I've discovered your stats.. or lack there of!";
+            }
+            return "I've discovered your stats!";
         }
     }
 }
