@@ -49,7 +49,7 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
                 throw;
             }
         }
-        private RPSPlayerStatsDataModel ReadStatsJson(ulong DiscordID)
+        public RPSPlayerStatsDataModel ReadStatsJson(ulong DiscordID)
         {
             RPSPlayerStatsDataModel obj = new RPSPlayerStatsDataModel();
             string FilePath = FilePaths.BuildFilePath($"{DiscordID}.json");
