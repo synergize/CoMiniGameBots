@@ -15,7 +15,11 @@ namespace CoMiniGameBots.Commands
         [Command("rpschallenge")]
         public async Task RockPaperScissorsChallengeStart(IUser P2)
         {
-            SocketUser P1 = Context.User;         
+            SocketUser P1 = Context.User;  
+            if (P1.Id == P2.Id)
+            {
+                return;
+            }
             if (CheckIfPlayerPlaying(P1, P2))
             {
                 MessagePlayers(P1, P2);

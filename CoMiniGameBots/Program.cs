@@ -55,11 +55,18 @@ namespace CoMiniGameBots
             var Message = MessageParam as SocketUserMessage;
             var Context = new SocketCommandContext(Client, Message);
             string RPSCheck = Message.Content.ToLower();
-
             if (Context.Message == null || Context.Message.Content == "") return;
             if (Context.User.IsBot) return;
+
             if (RPSCheck == "!rock" || RPSCheck == "!paper" || RPSCheck == "!scissors")
             {
+                if (Context.Guild != null)
+                {
+                   await Message.DeleteAsync();
+                    await Context.Channel.SendMessageAsync($"{Context.User.Mention} Please send your play directly to me. I've deleted your message for safety!", false, null);
+                    return;
+                }
+
                 if (!CheckGames(Context.User))
                 {
                     await Context.Channel.SendMessageAsync(null, false,
@@ -86,7 +93,7 @@ namespace CoMiniGameBots
                 }
                 else if (Results.POne.IsWinner == false && Results.PTwo.IsWinner == false && Results.POne.Choice != null && Results.PTwo.Choice != null)
                 {
-                    await Results.GameChannel.SendMessageAsync("Draw!");
+                    await Results.GameChannel.SendMessageAsync("I'm lazy.. you've both picked the same thing. Draw!");
                     return;
                 }
                 else

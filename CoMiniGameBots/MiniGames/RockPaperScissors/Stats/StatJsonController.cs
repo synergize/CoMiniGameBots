@@ -12,33 +12,41 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
     {
         public void SaveStatsJson(List<RPSPlayerStatsDataModel> ListStats)
         {
-            foreach (var item in ListStats)
+            try
             {
-                string FilePath = FilePaths.BuildFilePath($"{item.DiscordID}.json");
-                var ReadFile = ReadStatsJson(item.DiscordID);
-                if (ReadFile == null)
+                foreach (var item in ListStats)
                 {
-                    using (StreamWriter file = File.CreateText(FilePath))
+                    string FilePath = FilePaths.BuildFilePath($"{item.DiscordID}.json");
+                    var ReadFile = ReadStatsJson(item.DiscordID);
+                    if (ReadFile == null)
                     {
-                        var serializer = new JsonSerializer
+                        using (StreamWriter file = File.CreateText(FilePath))
                         {
-                            Formatting = Formatting.Indented
-                        };
-                        serializer.Serialize(file, item);
+                            var serializer = new JsonSerializer
+                            {
+                                Formatting = Formatting.Indented
+                            };
+                            serializer.Serialize(file, item);
+                        }
+                    }
+                    else
+                    {
+                        using (StreamWriter file = File.CreateText(FilePath))
+                        {
+                            PopulateStatObject Convert = new PopulateStatObject();
+                            var serializer = new JsonSerializer
+                            {
+                                Formatting = Formatting.Indented
+                            };
+                            serializer.Serialize(file, UpdateStatsJson(ReadFile, item));
+                        }
                     }
                 }
-                else
-                {
-                    using (StreamWriter file = File.CreateText(FilePath))
-                    {
-                        PopulateStatObject Convert = new PopulateStatObject();
-                        var serializer = new JsonSerializer
-                        {
-                            Formatting = Formatting.Indented
-                        };
-                        serializer.Serialize(file, UpdateStatsJson(ReadFile, item));
-                    }
-                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
         }
         private RPSPlayerStatsDataModel ReadStatsJson(ulong DiscordID)
