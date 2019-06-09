@@ -19,6 +19,7 @@ namespace CoMiniGameBots.Commands
             var PlayerStats = Read.ReadStatsJson(user.Id);
             if (PlayerStats == null)
             {
+                await Context.User.SendMessageAsync("You've not played a game yet. Challenge someone!", false, null);
                 return;
             }
             else

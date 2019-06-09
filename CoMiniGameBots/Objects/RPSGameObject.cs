@@ -13,7 +13,6 @@ namespace CoMiniGameBots.Objects
     {
         private RPSPlayerGameObject PlayerTwo;
         private RPSPlayerGameObject PlayerOne;
-
         private bool GameActive = false;
         private ISocketMessageChannel StartedChannel;
         private int MatchID = RPSGameDataClass.GameID;
