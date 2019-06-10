@@ -90,6 +90,7 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
             InfoFromFile.Stats.NumberRocks += NewInfo.Stats.NumberRocks;
             InfoFromFile.Stats.NumberScissors += NewInfo.Stats.NumberScissors;
             InfoFromFile.Stats.NumberWins += NewInfo.Stats.NumberWins;
+            InfoFromFile.Stats.NumberDraws += NewInfo.Stats.NumberDraws;
 
             return InfoFromFile;
         }

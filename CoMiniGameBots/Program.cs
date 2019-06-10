@@ -54,7 +54,7 @@ namespace CoMiniGameBots
         {
             var Message = MessageParam as SocketUserMessage;
             var Context = new SocketCommandContext(Client, Message);
-            string RPSCheck = Message.Content.ToLower();
+            string RPSCheck = Message.Content.ToLower().Trim();
             if (Context.Message == null || Context.Message.Content == "") return;
             if (Context.User.IsBot) return;
 

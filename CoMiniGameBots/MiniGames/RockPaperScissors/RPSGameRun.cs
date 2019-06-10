@@ -67,9 +67,9 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
                 Game.PTwo.IsWinner = false;
                 return Game;
             }
-            if ((Game.POne.Choice == "scissors" && Game.PTwo.Choice == "paper") ||
-                (Game.POne.Choice == "paper" && Game.PTwo.Choice == "rock") ||
-                (Game.POne.Choice == "rock" && Game.PTwo.Choice == "scissors"))
+            if ((Game.POne.Choice == "!scissors" && Game.PTwo.Choice == "!paper") ||
+                (Game.POne.Choice == "!paper" && Game.PTwo.Choice == "!rock") ||
+                (Game.POne.Choice == "!rock" && Game.PTwo.Choice == "!scissors"))
             {
                 Game.POne.IsWinner = true;
                 return Game;

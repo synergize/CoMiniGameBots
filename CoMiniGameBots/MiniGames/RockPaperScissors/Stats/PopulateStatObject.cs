@@ -72,7 +72,7 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
             switch (player.Choice)
             {
                 case "!scissors":
-                    stats.Stats.NumberLosses += 1;
+                    stats.Stats.NumberScissors += 1;
                     return stats;
                 case "!paper":
                     stats.Stats.NumberPaper += 1;
