@@ -39,7 +39,7 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
                     {
                         item.POne.Choice = play;                        
                     }
-                    else
+                    else if (item.PTwo.User.Id == user.Id)
                     {
                         item.PTwo.Choice = play;
                     }

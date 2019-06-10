@@ -29,6 +29,7 @@ namespace CoMiniGameBots.Commands
             else
             {
                 await Context.Channel.SendMessageAsync("Player Already Playing");
+                
             }
         }
         private async void MessagePlayers(IUser P1, IUser P2)
