@@ -9,6 +9,7 @@ namespace CoMiniGameBots.Static_Data
     {
         private static List<RPSGameObject> ListOfGames = new List<RPSGameObject>();
         private static List<RPSPlayerGameObject> ListOfStats = new List<RPSPlayerGameObject>();
+        private static Queue<RPSGameObject> QueueOfGames = new Queue<RPSGameObject>();
         public static List<RPSPlayerGameObject> PlayerStatsList
         {
             get { return ListOfStats; }
@@ -18,6 +19,11 @@ namespace CoMiniGameBots.Static_Data
         {
             get { return ListOfGames; }
             set { ListOfGames = value; }
+        }
+        public static Queue<RPSGameObject> ActiveQueue
+        {
+            get { return QueueOfGames; }
+            set { QueueOfGames = value; }
         }
     }
 }
