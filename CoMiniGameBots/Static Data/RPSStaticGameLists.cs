@@ -9,15 +9,15 @@ namespace CoMiniGameBots.Static_Data
     {
         private static List<RPSGameObject> ListOfGames = new List<RPSGameObject>();
         private static List<RPSPlayerGameObject> ListOfStats = new List<RPSPlayerGameObject>();
-        //public static List<RPSPlayerGameObject> PlayerStatsList
-        //{
-        //    get { return ListOfStats; }
-        //    set { ListOfStats = value; }
-        //}
-        //public static List<RPSGameObject> ActiveGames
-        //{
-        //    get { return ListOfGames; }
-        //    set { ListOfGames = value; }
-        //}
+        public static List<RPSPlayerGameObject> PlayerStatsList
+        {
+            get { return ListOfStats; }
+            set { ListOfStats = value; }
+        }
+        public static List<RPSGameObject> ActiveGames
+        {
+            get { return ListOfGames; }
+            set { ListOfGames = value; }
+        }
     }
 }

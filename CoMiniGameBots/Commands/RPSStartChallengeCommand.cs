@@ -1,5 +1,6 @@
 ﻿using CoMiniGameBots.Message_Building;
 using CoMiniGameBots.MiniGames.RockPaperScissors;
+using CoMiniGameBots.Static_Data;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -39,13 +40,13 @@ namespace CoMiniGameBots.Commands
         }
         private bool CheckIfPlayerPlaying(IUser P1, IUser P2)
         {
-            foreach (var item in RPSGameDataClass.ActiveGames)
+            foreach (var item in RPSStaticGameLists.ActiveGames)
             {
                 if (item.POne.User == P1 || item.PTwo.User == P1 || item.POne.User == P2 || item.PTwo.User == P2)
                 {        
                     if (item.StartTime.AddMinutes(5) < DateTime.UtcNow)
                     {
-                        RPSGameDataClass.ActiveGames.Remove(item);
+                        RPSStaticGameLists.ActiveGames.Remove(item);
                         return true;
                     }
                     return false;

@@ -15,7 +15,6 @@ namespace CoMiniGameBots.Objects
         private RPSPlayerGameObject PlayerOne;
         private bool GameActive = false;
         private ISocketMessageChannel StartedChannel;
-        private int MatchID = RPSGameDataClass.GameID;
         private string Winner = null;
         private string Loser = null;
         private DateTime TimeStarted;
@@ -23,7 +22,6 @@ namespace CoMiniGameBots.Objects
         {
             PlayerOne = P1;
             PlayerTwo = P2;
-            RPSGameDataClass.GameID++;
             GameActive = true;
             StartedChannel = channel;
             TimeStarted = DateTime.UtcNow;
@@ -49,10 +47,6 @@ namespace CoMiniGameBots.Objects
         {
             get { return GameActive; }
             set { GameActive = value; }
-        }
-        public int ID
-        {
-            get { return MatchID; }
         }
         public ISocketMessageChannel GameChannel
         {

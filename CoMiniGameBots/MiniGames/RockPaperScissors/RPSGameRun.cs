@@ -2,6 +2,7 @@
 using CoMiniGameBots.Message_Building;
 using CoMiniGameBots.MiniGames.RockPaperScissors.Stats;
 using CoMiniGameBots.Objects;
+using CoMiniGameBots.Static_Data;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -20,7 +21,7 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
             try
             {
                 RPSGameObject ActiveGame = new RPSGameObject(PopulatePlayerObject(POne), PopulatePlayerObject(PTwo), channel);
-                RPSGameDataClass.ActiveGames.Add(ActiveGame);
+                RPSStaticGameLists.ActiveGames.Add(ActiveGame);
             }       
             catch (Exception e)
             {
@@ -30,9 +31,9 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
         }
         public RPSGameObject GetPlayerEntry(IUser user, string play)
         {
-            for (int i = 0; i < RPSGameDataClass.ActiveGames.Count; i++)
+            for (int i = 0; i < RPSStaticGameLists.ActiveGames.Count; i++)
             {
-                var item = RPSGameDataClass.ActiveGames[i];
+                var item = RPSStaticGameLists.ActiveGames[i];
                 if (item.IsActive == true)
                 {
                     if (item.POne.User.Id == user.Id)
@@ -48,10 +49,10 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
                         StatJsonController Save = new StatJsonController();
                         PopulateStatObject Populate = new PopulateStatObject();
                         var Winner = DetermineWinner(item);
-                        RPSGameDataClass.PlayerStatsList.Add(Winner.POne);
-                        RPSGameDataClass.PlayerStatsList.Add(Winner.PTwo);
+                        RPSStaticGameLists.PlayerStatsList.Add(Winner.POne);
+                        RPSStaticGameLists.PlayerStatsList.Add(Winner.PTwo);
                         item.IsActive = false;
-                        Save.SaveStatsJson(Populate.SetPlayerStats(RPSGameDataClass.ActiveGames));
+                        Save.SaveStatsJson(Populate.SetPlayerStats(RPSStaticGameLists.ActiveGames));
                         return Winner;
                     }
                     return item;
