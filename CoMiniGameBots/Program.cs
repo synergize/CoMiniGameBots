@@ -93,7 +93,7 @@ namespace CoMiniGameBots
                 }
                 else if (Results.POne.IsWinner == false && Results.PTwo.IsWinner == false && Results.POne.Choice != null && Results.PTwo.Choice != null)
                 {
-                    await Results.GameChannel.SendMessageAsync("I'm lazy.. you've both picked the same thing. Draw!");
+                    await Results.GameChannel.SendMessageAsync($"{Results.POne.User.Mention} and {Results.PTwo.User.Mention}, I'm lazy.. you've both picked the same thing. Draw!");
                     return;
                 }
                 else
@@ -125,7 +125,7 @@ namespace CoMiniGameBots
 
         private bool CheckGames(IUser user)
         {
-            foreach (var ActiveGame in RPSGameDataClass.ActiveGames)
+            foreach (var ActiveGame in RPSStaticGameLists.ActiveGames)
             {
                 if (ActiveGame.POne.User.Id == user.Id || ActiveGame.PTwo.User.Id == user.Id)
                 {

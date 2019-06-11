@@ -1,4 +1,5 @@
 ﻿using CoMiniGameBots.Objects;
+using CoMiniGameBots.Static_Data;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -48,7 +49,7 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
                     listStats.Add(p1);
                     listStats.Add(p2);
 
-                    RPSGameDataClass.ActiveGames.Remove(game);
+                    RPSStaticGameLists.ActiveGames.Remove(game);
                 }
 
             }
