@@ -15,6 +15,7 @@ namespace CoMiniGameBots.Objects
         private RPSPlayerGameObject PlayerOne;
         private bool GameActive = false;
         private ISocketMessageChannel StartedChannel;
+        private bool Random;
         private string Winner = null;
         private string Loser = null;
         private DateTime TimeStarted;
@@ -25,10 +26,15 @@ namespace CoMiniGameBots.Objects
             GameActive = true;
             StartedChannel = channel;
             TimeStarted = DateTime.UtcNow;
+            Random = false;
         }
-        public RPSGameObject(string win)
+        public RPSGameObject(RPSPlayerGameObject P1, RPSPlayerGameObject P2)
         {
-            Winner = win;
+            PlayerOne = P1;
+            PlayerTwo = P2;
+            GameActive = true;
+            TimeStarted = DateTime.UtcNow;
+            Random = true;
         }
 
         public RPSGameObject()
@@ -55,6 +61,10 @@ namespace CoMiniGameBots.Objects
         public DateTime StartTime
         {
             get { return TimeStarted; }
+        }
+        public bool IsRandom
+        {
+            get { return Random; }
         }
     }
 }

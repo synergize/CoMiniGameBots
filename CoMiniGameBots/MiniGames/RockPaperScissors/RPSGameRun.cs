@@ -16,7 +16,7 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
 {
     class RPSGameRun
     {
-        public void GameRun(IUser POne, IUser PTwo, ISocketMessageChannel channel)
+        public void GameRunChallenge(IUser POne, IUser PTwo, ISocketMessageChannel channel)
         {
             try
             {
@@ -28,6 +28,10 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
                 Console.WriteLine(e);
                 throw;
             }
+        }
+       public void GameRunRandom(IUser player, ISocketMessageChannel channel)
+        {
+            RPSStaticGameLists.ActiveQueue.Enqueue(PopulatePlayerObject(player));
         }
         public RPSGameObject GetPlayerEntry(IUser user, string play)
         {
@@ -85,13 +89,11 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
         {
             await user.SendMessageAsync(null, false, GameTimedOutEmbed.RPSGameTimedOut().Build());
         }
-        private RPSPlayerGameObject PopulatePlayerObject(IUser user)
+        public RPSPlayerGameObject PopulatePlayerObject(IUser user)
         {
             RPSPlayerGameObject Player = new RPSPlayerGameObject(user);
 
             return Player;
-        }
-
-        
+        }        
     }
 }
