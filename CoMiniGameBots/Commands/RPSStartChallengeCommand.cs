@@ -25,7 +25,7 @@ namespace CoMiniGameBots.Commands
             {
                 MessagePlayers(P1, P2);
                 RPSGameRun Game = new RPSGameRun();
-                Game.GameRun(P1, P2, Context.Channel);
+                Game.GameRunChallenge(P1, P2, Context.Channel);                
             }
             else
             {
