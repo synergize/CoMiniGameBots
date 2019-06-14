@@ -54,38 +54,13 @@ namespace CoMiniGameBots
         {
             var Message = MessageParam as SocketUserMessage;
             var Context = new SocketCommandContext(Client, Message);
-            string RPSCheck = Message.Content.ToLower().Trim();
+            
             if (Context.Message == null || Context.Message.Content == "") return;
             if (Context.User.IsBot) return;
 
-            if (RPSCheck == "!rock" || RPSCheck == "!paper" || RPSCheck == "!scissors")
-            {
-                if (Context.Guild != null)
-                {
-                   await Message.DeleteAsync();
-                    await Context.Channel.SendMessageAsync($"{Context.User.Mention} Please send your play directly to me. I've deleted your message for safety!", false, null);
-                    return;
-                }
+            
+            await FilterRPSReplies(Message, Context); // Checking Rock Paper Scissors replies.
 
-                if (!CheckGames(Context.User))
-                {
-                    await Context.Channel.SendMessageAsync(null, false,
-                        PlayerNoActiveGamesEmbed.RPSPlayerNeeded(Context.User).Build());
-                    return;
-                }
-                RPSGameRun Entry = new RPSGameRun();
-                DetermineMessageMain PlayerMessage = new DetermineMessageMain();
-                RPSGameObject Results = Entry.GetPlayerEntry(Context.User, RPSCheck);
-                if (Results.IsRandom)
-                {
-                    await PlayerMessage.SendRandomMessageAsync(Results, Context);
-                }
-                else
-                {
-                    await PlayerMessage.SendChallengedMessageAsync(Results, Context);
-                }              
-                
-            }
 
             int ArgPos = 0;
             if (!(Message.HasCharPrefix('!', ref ArgPos) || Message.HasMentionPrefix(Client.CurrentUser, ref ArgPos))) return;
@@ -106,6 +81,14 @@ namespace CoMiniGameBots
             if (((SocketUser)Reaction.User).IsBot) return;
         }
 
+        /// <summary>
+        /// Checks passes in the user sending a message to see if they're in an active game.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <see cref="RPSStaticGameLists.ActiveGames"/>
+        /// <returns> 
+        /// Returns trueif they're in an active game. 
+        /// </returns>
         private bool CheckGames(IUser user)
         {
             foreach (var ActiveGame in RPSStaticGameLists.ActiveGames)
@@ -120,6 +103,44 @@ namespace CoMiniGameBots
             }
 
             return false;
+        }
+        /// <summary>
+        /// Logic that checks a users message and we determine if the answer is for Rock Paper Scissors. If the message is acceptable, we head into the RPS game(s). 
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <param name="Context"></param>
+        /// <returns></returns>
+        private async Task FilterRPSReplies(SocketUserMessage Message, SocketCommandContext Context)
+        {
+            string RPSCheck = Message.Content.ToLower().Trim();
+            if (RPSCheck == "!rock" || RPSCheck == "!paper" || RPSCheck == "!scissors")
+            {
+                if (Context.Guild != null)
+                {
+                    await Message.DeleteAsync();
+                    await Context.Channel.SendMessageAsync($"{Context.User.Mention} Please send your play directly to me. I've deleted your message for safety!", false, null);
+                    return;
+                }
+
+                if (!CheckGames(Context.User))
+                {
+                    await Context.Channel.SendMessageAsync(null, false,
+                        PlayerNoActiveGamesEmbed.RPSPlayerNeeded(Context.User).Build());
+                    return;
+                }
+                RPSGameRun Entry = new RPSGameRun();
+                DetermineMessageMain PlayerMessage = new DetermineMessageMain();
+                RPSGameObject Results = Entry.GetPlayerEntry(Context.User, RPSCheck);
+                if (Results.IsRandom)
+                {
+                    await PlayerMessage.SendRandomMessageAsync(Results, Context);
+                }
+                else
+                {
+                    await PlayerMessage.SendChallengedMessageAsync(Results, Context);
+                }
+
+            }
         }
     }
 }

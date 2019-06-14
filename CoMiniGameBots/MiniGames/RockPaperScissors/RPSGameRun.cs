@@ -16,6 +16,13 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
 {
     class RPSGameRun
     {
+        /// <summary>
+        /// Kicks off an instance of the game when a player is challenged by another player. We use <see cref="IUser"/> to store both player's Discord Name and Discord unique ID. 
+        /// <see cref="ISocketMessageChannel"/> is passed in to make sure we display the results in the channel where the game was initated. 
+        /// </summary>
+        /// <param name="POne"></param>
+        /// <param name="PTwo"></param>
+        /// <param name="channel"></param>
         public void GameRunChallenge(IUser POne, IUser PTwo, ISocketMessageChannel channel)
         {
             try
@@ -29,10 +36,24 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
                 throw;
             }
         }
-       public void GameRunRandom(IUser player, ISocketMessageChannel channel)
+        /// <summary>
+        /// Adds a player to <see cref="RPSStaticGameLists.ActiveQueue"/> when queuing up for a random match.  
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="channel"></param>
+       public void AddPlayerToQueue(IUser player, ISocketMessageChannel channel)
         {
             RPSStaticGameLists.ActiveQueue.Enqueue(PopulatePlayerObject(player));
         }
+        /// <summary>
+        /// Checks a player's entry. We do this by looping through the RPSStaticGameLists.ActiveGames list and only checking games at are currently active. 
+        /// Once determined active we check if the users unique Discord ID exists, if so we add their choice to the RPSGameObject. 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="play"></param>
+        /// <returns>
+        /// RPSGameObject
+        /// </returns>
         public RPSGameObject GetPlayerEntry(IUser user, string play)
         {
             for (int i = 0; i < RPSStaticGameLists.ActiveGames.Count; i++)
@@ -54,6 +75,11 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
             }
             return null;
         }
+        /// <summary>
+        /// Checks the game object to see if both players have provided an answer. If they have, we start the logic to determine who won then store their stats. 
+        /// </summary>
+        /// <param name="game"></param>
+        /// <returns></returns>
         private RPSGameObject IsWinner(RPSGameObject game)
         {
             if (game.PTwo.Choice != null && game.POne.Choice != null)
@@ -70,6 +96,14 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
             return game;
             
         }
+
+        /// <summary>
+        /// Checks the answers provided by both players to determine the winner. After a winner is decided we set a boolean inside <see cref="RPSGameObject"/> associated with the winning or losing player. 
+        /// </summary>
+        /// <param name=""="Game"></param>
+        /// <see cref="RPSGameObject.POne"/>
+        /// <see cref="RPSGameObject.PTwo"/>
+        /// <returns></returns>
         private RPSGameObject DetermineWinner(RPSGameObject Game)
         {
             if (Game.POne.Choice == Game.PTwo.Choice)
@@ -91,10 +125,13 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
                 return Game;
             }
         }
-        private async void TimedOutMessage(IUser user)
-        {
-            await user.SendMessageAsync(null, false, GameTimedOutEmbed.RPSGameTimedOut().Build());
-        }
+        /// <summary>
+        /// Function that takes a Discord IUser Object and mutates the data into my own RPSPlayerGameObject. 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <see cref="RPSPlayerGameObject"/>
+        /// <see cref="IUser"/>
+        /// <returns></returns>
         public RPSPlayerGameObject PopulatePlayerObject(IUser user)
         {
             RPSPlayerGameObject Player = new RPSPlayerGameObject(user);

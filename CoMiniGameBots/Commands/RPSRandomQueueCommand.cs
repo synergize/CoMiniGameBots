@@ -34,7 +34,7 @@ namespace CoMiniGameBots.Commands
                     }
                     else
                     {
-                        Game.GameRunRandom(user, channel);
+                        Game.AddPlayerToQueue(user, channel);
                         await Context.Channel.SendMessageAsync("You've been added to the queue. Please wait for someone to join! I'll message you when the game is ready.");
                     }
                 }
