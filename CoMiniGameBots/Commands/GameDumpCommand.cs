@@ -23,6 +23,7 @@ namespace CoMiniGameBots.Commands
                     count++;
                     EmbedBuilder Debug = new EmbedBuilder();
                     Debug.Title = $"{count}) Game";
+                    Debug.Description = $"{item.IsActive.ToString()}";
                     Debug.AddField("Player 1 Username: ", $"{item.POne.User.Username}");
                     if (item.POne.Choice != null)
                     {

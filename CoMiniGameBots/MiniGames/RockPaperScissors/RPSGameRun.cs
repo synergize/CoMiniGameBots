@@ -37,32 +37,38 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
         {
             for (int i = 0; i < RPSStaticGameLists.ActiveGames.Count; i++)
             {
-                var item = RPSStaticGameLists.ActiveGames[i];
-                if (item.IsActive == true)
+                 var CurrentGame = RPSStaticGameLists.ActiveGames[i];
+                if (CurrentGame.IsActive == true)
                 {
-                    if (item.POne.User.Id == user.Id)
+                    if (CurrentGame.POne.User.Id == user.Id && CurrentGame.POne.Choice == null)
                     {
-                        item.POne.Choice = play;                        
+                        CurrentGame.POne.Choice = play;
+                        return IsWinner(CurrentGame);
                     }
-                    else if (item.PTwo.User.Id == user.Id)
+                    else if (CurrentGame.PTwo.User.Id == user.Id && CurrentGame.PTwo.Choice == null)
                     {
-                        item.PTwo.Choice = play;
-                    }
-                    if (item.PTwo.Choice != null && item.POne.Choice != null)
-                    {
-                        StatJsonController Save = new StatJsonController();
-                        PopulateStatObject Populate = new PopulateStatObject();
-                        var Winner = DetermineWinner(item);
-                        RPSStaticGameLists.PlayerStatsList.Add(Winner.POne);
-                        RPSStaticGameLists.PlayerStatsList.Add(Winner.PTwo);
-                        item.IsActive = false;
-                        Save.SaveStatsJson(Populate.SetPlayerStats(RPSStaticGameLists.ActiveGames));
-                        return Winner;
-                    }
-                    return item;
+                        CurrentGame.PTwo.Choice = play;
+                        return IsWinner(CurrentGame);
+                    }                 
                 }
             }
             return null;
+        }
+        private RPSGameObject IsWinner(RPSGameObject game)
+        {
+            if (game.PTwo.Choice != null && game.POne.Choice != null)
+            {
+                StatJsonController Save = new StatJsonController();
+                PopulateStatObject Populate = new PopulateStatObject();
+                var Winner = DetermineWinner(game);
+                RPSStaticGameLists.PlayerStatsList.Add(Winner.POne);
+                RPSStaticGameLists.PlayerStatsList.Add(Winner.PTwo);
+                game.IsActive = false;
+                Save.SaveStatsJson(Populate.SetPlayerStats(RPSStaticGameLists.ActiveGames));
+                return Winner;
+            }
+            return game;
+            
         }
         private RPSGameObject DetermineWinner(RPSGameObject Game)
         {
