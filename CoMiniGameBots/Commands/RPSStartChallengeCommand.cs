@@ -26,7 +26,7 @@ namespace CoMiniGameBots.Commands
             {
                 return;
             }
-            if (CheckIfPlayerPlaying(P1, P2))
+            if (!CheckIfPlayerPlaying(P1, P2))
             {
                 MessagePlayers(P1, P2);
                 RPSGameRun Game = new RPSGameRun();
@@ -57,15 +57,14 @@ namespace CoMiniGameBots.Commands
         /// <returns></returns>
         private bool CheckIfPlayerPlaying(IUser P1, IUser P2)
         {
-            foreach (var item in RPSStaticGameLists.ActiveGames)
+            var ActiveGames = RPSStaticGameLists.GetAllActiveGame();
+            var currentEntry = ActiveGames.Find(x => x.POne.User == P1 || x.PTwo.User == P1 || x.POne.User == P2 || x.PTwo.User == P2);
+
+            if (currentEntry != null)
             {
-                if (item.POne.User == P1 || item.PTwo.User == P1 || item.POne.User == P2 || item.PTwo.User == P2)
-                {        
-                    if (item.StartTime.AddMinutes(5) < DateTime.UtcNow)
-                    {
-                        RPSStaticGameLists.ActiveGames.Remove(item);
-                        return true;
-                    }
+                if (currentEntry.StartTime.AddMinutes(5) < DateTime.UtcNow)
+                {
+                    RPSStaticGameLists.ActiveGames.Remove(currentEntry);
                     return false;
                 }
                 else
@@ -73,7 +72,7 @@ namespace CoMiniGameBots.Commands
                     return true;
                 }
             }
-            return true;
+            return false;
         }
     }
 }

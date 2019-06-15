@@ -25,5 +25,11 @@ namespace CoMiniGameBots.Static_Data
             get { return QueueOfGames; }
             set { QueueOfGames = value; }
         }
+
+        public static List<RPSGameObject> GetAllActiveGame()
+        {
+            return RPSStaticGameLists.ActiveGames.FindAll(x => x.IsActive);
+        }
+
     }
 }
