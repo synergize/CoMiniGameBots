@@ -1,11 +1,13 @@
 ﻿using CoMiniGameBots.Message_Building;
 using CoMiniGameBots.MiniGames.RockPaperScissors;
+using CoMiniGameBots.Objects;
 using CoMiniGameBots.Static_Data;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,7 +28,7 @@ namespace CoMiniGameBots.Commands
             {
                 return;
             }
-            if (CheckIfPlayerPlaying(P1, P2))
+            if (!CheckIfPlayerPlaying(P1) && !CheckIfPlayerPlaying(P2))
             {
                 MessagePlayers(P1, P2);
                 RPSGameRun Game = new RPSGameRun();
@@ -34,7 +36,23 @@ namespace CoMiniGameBots.Commands
             }
             else
             {
-                await Context.Channel.SendMessageAsync("Player Already Playing");
+                var ActiveGames = RPSStaticGameLists.GetAllActiveGame();
+                var checkP1 = ActiveGames.Find(x => x.POne.User == P1 || x.POne.User == P2);
+                var checkP2 = ActiveGames.Find(x => x.PTwo.User == P1 || x.PTwo.User == P2);
+
+                if (checkP1 == null && checkP2 == null)
+                {
+                    await Context.Channel.SendMessageAsync($"No Users Found");
+                }
+                else if (checkP1 == null)
+                {
+                    await Context.Channel.SendMessageAsync($"{P2.Mention} Already Playing");
+                }
+                else
+                {
+                    await Context.Channel.SendMessageAsync($"{P1.Mention} Already Playing");
+                }
+                
                 
             }
         }
@@ -55,25 +73,22 @@ namespace CoMiniGameBots.Commands
         /// <param name="P1"></param>
         /// <param name="P2"></param>
         /// <returns></returns>
-        private bool CheckIfPlayerPlaying(IUser P1, IUser P2)
+        private bool CheckIfPlayerPlaying(IUser player)
         {
-            foreach (var item in RPSStaticGameLists.ActiveGames)
+            var ActiveGames = RPSStaticGameLists.GetAllActiveGame();
+            if (ActiveGames.Exists(x => x.PTwo.User == player || x.POne.User == player))
             {
-                if (item.POne.User == P1 || item.PTwo.User == P1 || item.POne.User == P2 || item.PTwo.User == P2)
-                {        
-                    if (item.StartTime.AddMinutes(5) < DateTime.UtcNow)
-                    {
-                        RPSStaticGameLists.ActiveGames.Remove(item);
-                        return true;
-                    }
-                    return false;
+                var currentEntry = ActiveGames.Find(x => x.POne.User == player || x.PTwo.User == player);
+                if (currentEntry.StartTime.AddMinutes(5) < DateTime.UtcNow)
+                {
+                    RPSStaticGameLists.ActiveGames.Remove(currentEntry);
                 }
                 else
                 {
                     return true;
                 }
             }
-            return true;
+            return false;
         }
     }
 }

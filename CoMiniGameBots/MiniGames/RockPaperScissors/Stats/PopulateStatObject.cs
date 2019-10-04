@@ -12,14 +12,12 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
         public List<RPSPlayerStatsDataModel> SetPlayerStats(List<RPSGameObject> listOfGames)
         {
             var listStats = new List<RPSPlayerStatsDataModel>();
+            var activeGame = listOfGames.FindAll(x => x.IsActive == false);
 
-            for (var i = 0; i < listOfGames.Count; i++)
+            for (var i = 0; i < activeGame.Count; i++)
             {
+                var game = activeGame[i];
 
-                var game = listOfGames[i];
-
-                if (!game.IsActive)
-                {
                     var p1 = new RPSPlayerStatsDataModel
                     {
                         Stats = new RPSPlayerStatsDataModel.PlayerStats()
@@ -50,7 +48,7 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
                     listStats.Add(p2);
 
                     RPSStaticGameLists.ActiveGames.Remove(game);
-                }
+                
 
             }
 

@@ -9,6 +9,7 @@ using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -56,22 +57,18 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
         /// </returns>
         public RPSGameObject GetPlayerEntry(IUser user, string play)
         {
-            for (int i = 0; i < RPSStaticGameLists.ActiveGames.Count; i++)
+            var activeGames = RPSStaticGameLists.GetAllActiveGame();
+            var currentEntry = activeGames.Find(x => x.POne.User.Id == user.Id || x.PTwo.User.Id == user.Id);
+
+            if (currentEntry.POne.User.Id == user.Id && currentEntry.POne.Choice == null)
             {
-                 var CurrentGame = RPSStaticGameLists.ActiveGames[i];
-                if (CurrentGame.IsActive == true)
-                {
-                    if (CurrentGame.POne.User.Id == user.Id && CurrentGame.POne.Choice == null)
-                    {
-                        CurrentGame.POne.Choice = play;
-                        return IsWinner(CurrentGame);
-                    }
-                    else if (CurrentGame.PTwo.User.Id == user.Id && CurrentGame.PTwo.Choice == null)
-                    {
-                        CurrentGame.PTwo.Choice = play;
-                        return IsWinner(CurrentGame);
-                    }                 
-                }
+                currentEntry.POne.Choice = play;
+                return IsWinner(currentEntry);
+            }
+            if (currentEntry.PTwo.User.Id == user.Id && currentEntry.PTwo.Choice == null)
+            {
+                currentEntry.PTwo.Choice = play;
+                return IsWinner(currentEntry);
             }
             return null;
         }
@@ -87,8 +84,8 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
                 StatJsonController Save = new StatJsonController();
                 PopulateStatObject Populate = new PopulateStatObject();
                 var Winner = DetermineWinner(game);
-                RPSStaticGameLists.PlayerStatsList.Add(Winner.POne);
-                RPSStaticGameLists.PlayerStatsList.Add(Winner.PTwo);
+                //RPSStaticGameLists.PlayerStatsList.Add(Winner.POne);
+                //RPSStaticGameLists.PlayerStatsList.Add(Winner.PTwo);
                 game.IsActive = false;
                 Save.SaveStatsJson(Populate.SetPlayerStats(RPSStaticGameLists.ActiveGames));
                 return Winner;

@@ -11,14 +11,14 @@ namespace CoMiniGameBots.Objects
 {
     public class RPSGameObject
     {
-        private RPSPlayerGameObject PlayerTwo;
-        private RPSPlayerGameObject PlayerOne;
+        private readonly RPSPlayerGameObject PlayerTwo;
+        private readonly RPSPlayerGameObject PlayerOne;
         private bool GameActive = false;
-        private ISocketMessageChannel StartedChannel;
-        private bool Random;
-        private string Winner = null;
-        private string Loser = null;
-        private DateTime TimeStarted;
+        private readonly ISocketMessageChannel StartedChannel;
+        private readonly bool Random;
+        private readonly string Winner = null;
+        private readonly string Loser = null;
+        private readonly DateTime TimeStarted;
         public RPSGameObject(RPSPlayerGameObject P1, RPSPlayerGameObject P2, ISocketMessageChannel channel)
         {
             PlayerOne = P1;
@@ -52,7 +52,7 @@ namespace CoMiniGameBots.Objects
         public bool IsActive
         {
             get { return GameActive; }
-            set { GameActive = value; }
+            set => GameActive = value;
         }
         public ISocketMessageChannel GameChannel
         {
