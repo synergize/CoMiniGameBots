@@ -28,7 +28,7 @@ namespace CoMiniGameBots.Static_Data
 
         public static List<RPSGameObject> GetAllActiveGame()
         {
-            return RPSStaticGameLists.ActiveGames.FindAll(x => x.IsActive);
+            return ActiveGames.FindAll(x => x.IsActive);
         }
 
     }
