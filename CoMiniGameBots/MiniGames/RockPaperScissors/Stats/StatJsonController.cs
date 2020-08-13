@@ -4,23 +4,22 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
 {
     public class StatJsonController
     {
-        public void SaveStatsJson(List<RPSPlayerStatsDataModel> ListStats)
+        public void SaveStatsJson(List<RpsPlayerStatsDataModel> ListStats)
         {
             try
             {
                 foreach (var item in ListStats)
                 {
-                    string FilePath = FilePaths.BuildFilePath($"{item.DiscordID}.json");
-                    var ReadFile = ReadStatsJson(item.DiscordID);
-                    if (ReadFile == null)
+                    var filePath = FilePaths.BuildFilePath($"{item.DiscordId}.json");
+                    var readFile = ReadStatsJson(item.DiscordId);
+                    if (readFile == null)
                     {
-                        using (StreamWriter file = File.CreateText(FilePath))
+                        using (var file = File.CreateText(filePath))
                         {
                             var serializer = new JsonSerializer
                             {
@@ -31,14 +30,13 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
                     }
                     else
                     {
-                        using (StreamWriter file = File.CreateText(FilePath))
+                        using (var file = File.CreateText(filePath))
                         {
-                            PopulateStatObject Convert = new PopulateStatObject();
                             var serializer = new JsonSerializer
                             {
                                 Formatting = Formatting.Indented
                             };
-                            serializer.Serialize(file, UpdateStatsJson(ReadFile, item));
+                            serializer.Serialize(file, UpdateStatsJson(readFile, item));
                         }
                     }
                 }
@@ -49,13 +47,13 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
                 throw;
             }
         }
-        public RPSPlayerStatsDataModel ReadStatsJson(ulong DiscordID)
+
+        public RpsPlayerStatsDataModel ReadStatsJson(ulong DiscordId)
         {
-            RPSPlayerStatsDataModel obj = new RPSPlayerStatsDataModel();
-            string FilePath = FilePaths.BuildFilePath($"{DiscordID}.json");
-            if (CheckFileExists(FilePath))
+            var filePath = FilePaths.BuildFilePath($"{DiscordId}.json");
+            if (CheckFileExists(filePath))
             {
-                obj = JsonConvert.DeserializeObject<RPSPlayerStatsDataModel>(File.ReadAllText(FilePath));
+                var obj = JsonConvert.DeserializeObject<RpsPlayerStatsDataModel>(File.ReadAllText(filePath));
 
                 return obj;
             }
@@ -64,17 +62,18 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
                 return null;
             }
         }
-        private bool CheckFileExists(string FilePath)
+
+        private static bool CheckFileExists(string FilePath)
         {
-            string newDir = FilePaths.DataDirectory;
+            var newDir = FilePaths.DataDirectory;
             if (!Directory.Exists(newDir))
             {
-                DirectoryInfo dir = Directory.CreateDirectory(newDir);
+                Directory.CreateDirectory(newDir);
             }
             if (!File.Exists(FilePath))
             {
-                var SteamIDJson = File.Create(FilePath);
-                SteamIDJson.Close();
+                var steamIdJson = File.Create(FilePath);
+                steamIdJson.Close();
                 return false;
             }
             else
@@ -82,7 +81,8 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
                 return true;
             }            
         }
-        private RPSPlayerStatsDataModel UpdateStatsJson(RPSPlayerStatsDataModel InfoFromFile, RPSPlayerStatsDataModel NewInfo)
+
+        private static RpsPlayerStatsDataModel UpdateStatsJson(RpsPlayerStatsDataModel InfoFromFile, RpsPlayerStatsDataModel NewInfo)
         {
             InfoFromFile.Name = NewInfo.Name;
             InfoFromFile.Stats.NumberLosses += NewInfo.Stats.NumberLosses;
@@ -94,6 +94,5 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
 
             return InfoFromFile;
         }
-
     }
 }

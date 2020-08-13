@@ -1,70 +1,44 @@
-﻿using CoMiniGameBots.MiniGames.RockPaperScissors;
-using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
+﻿using Discord.WebSocket;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+using CoMiniGameBots.Extensions;
 
 namespace CoMiniGameBots.Objects
 {
-    public class RPSGameObject
+    public class RpsGameObject
     {
-        private readonly RPSPlayerGameObject PlayerTwo;
-        private readonly RPSPlayerGameObject PlayerOne;
-        private bool GameActive = false;
-        private readonly ISocketMessageChannel StartedChannel;
-        private readonly bool Random;
-        private readonly string Winner = null;
-        private readonly string Loser = null;
-        private readonly DateTime TimeStarted;
-        public RPSGameObject(RPSPlayerGameObject P1, RPSPlayerGameObject P2, ISocketMessageChannel channel)
+        public RpsGameObject(RpsPlayerGameObject P1, RpsPlayerGameObject P2, ISocketMessageChannel channel)
         {
-            PlayerOne = P1;
-            PlayerTwo = P2;
-            GameActive = true;
-            StartedChannel = channel;
-            TimeStarted = DateTime.UtcNow;
-            Random = false;
-        }
-        public RPSGameObject(RPSPlayerGameObject P1, RPSPlayerGameObject P2)
-        {
-            PlayerOne = P1;
-            PlayerTwo = P2;
-            GameActive = true;
-            TimeStarted = DateTime.UtcNow;
-            Random = true;
+            POne = P1;
+            PTwo = P2;
+            GameChannel = channel;
+            StartTime = DateTime.UtcNow;
+            IsRandom = false;
         }
 
-        public RPSGameObject()
+        public RpsGameObject(RpsPlayerGameObject P1, RpsPlayerGameObject P2)
         {
+            POne = P1;
+            PTwo = P2;
+            StartTime = DateTime.UtcNow;
+            IsRandom = true;
+        }
 
-        }
-        public RPSPlayerGameObject POne
+        public RpsPlayerGameObject POne { get; }
+        public RpsPlayerGameObject PTwo { get; }
+        public ISocketMessageChannel GameChannel { get; }
+
+        public DateTime StartTime { get; }
+
+        public bool IsRandom { get; }
+
+        public RpsGameObject AddActiveGame(RpsGameObject game)
         {
-            get { return PlayerOne; }
+            return game.InitializeGame();
         }
-        public RPSPlayerGameObject PTwo
+
+        public static void ConcludeGame(RpsGameObject game)
         {
-            get { return PlayerTwo; }
-        }
-        public bool IsActive
-        {
-            get { return GameActive; }
-            set => GameActive = value;
-        }
-        public ISocketMessageChannel GameChannel
-        {
-            get { return StartedChannel; }
-        }
-        public DateTime StartTime
-        {
-            get { return TimeStarted; }
-        }
-        public bool IsRandom
-        {
-            get { return Random; }
+            game.RemoveGame();
         }
     }
 }
