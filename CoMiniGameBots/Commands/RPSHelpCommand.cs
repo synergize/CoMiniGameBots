@@ -9,7 +9,7 @@ namespace CoMiniGameBots.Commands
         [Command("rpshelp")]
         public async Task RpsHelp()
         {
-            await Context.Channel.SendMessageAsync(null, false, RPSHelpEmbed.RPSHelp().Build());
+            await Context.Channel.SendMessageAsync(null, false, RpsHelpEmbed.RpsHelp().Build());
         }
    }
 }

@@ -17,12 +17,12 @@ namespace CoMiniGameBots.Message_Building
 
                 if (Results.POne.IsWinner)
                 {
-                    return await Results.GameChannel.SendMessageAsync(null, false, AnnouceWinnerMessageEmbed.RPSWinner(Results.POne, Results.PTwo).Build());
+                    return await Results.GameChannel.SendMessageAsync(null, false, AnnounceWinnerMessageEmbed.RpsWinner(Results.POne, Results.PTwo).Build());
                 }
 
                 if (Results.PTwo.IsWinner)
                 {
-                    return await Results.GameChannel.SendMessageAsync(null, false, AnnouceWinnerMessageEmbed.RPSWinner(Results.PTwo, Results.POne).Build());
+                    return await Results.GameChannel.SendMessageAsync(null, false, AnnounceWinnerMessageEmbed.RpsWinner(Results.PTwo, Results.POne).Build());
                     
                 }
 
@@ -43,16 +43,16 @@ namespace CoMiniGameBots.Message_Building
             }
             if (Results.POne.IsWinner)
             {
-                await Results.POne.User.SendMessageAsync(null, false, AnnouceWinnerMessageEmbed.RPSWinner(Results.POne, Results.PTwo).Build());
-                await Results.PTwo.User.SendMessageAsync(null, false, AnnouceWinnerMessageEmbed.RPSWinner(Results.POne, Results.PTwo).Build());
+                await Results.POne.User.SendMessageAsync(null, false, AnnounceWinnerMessageEmbed.RpsWinner(Results.POne, Results.PTwo).Build());
+                await Results.PTwo.User.SendMessageAsync(null, false, AnnounceWinnerMessageEmbed.RpsWinner(Results.POne, Results.PTwo).Build());
                 return;
 
             }
 
             if (Results.PTwo.IsWinner)
             {
-                await Results.POne.User.SendMessageAsync(null, false, AnnouceWinnerMessageEmbed.RPSWinner(Results.PTwo, Results.POne).Build());
-                await Results.PTwo.User.SendMessageAsync(null, false, AnnouceWinnerMessageEmbed.RPSWinner(Results.PTwo, Results.POne).Build());
+                await Results.POne.User.SendMessageAsync(null, false, AnnounceWinnerMessageEmbed.RpsWinner(Results.PTwo, Results.POne).Build());
+                await Results.PTwo.User.SendMessageAsync(null, false, AnnounceWinnerMessageEmbed.RpsWinner(Results.PTwo, Results.POne).Build());
                 return;
 
             }

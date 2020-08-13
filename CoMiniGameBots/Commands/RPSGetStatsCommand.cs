@@ -20,7 +20,7 @@ namespace CoMiniGameBots.Commands
             }
             else
             {
-                await Context.User.SendMessageAsync(null, false, PlayerStatsMessageEmbed.RPSPlayerStats(playerStats, user).Build());
+                await Context.User.SendMessageAsync(null, false, PlayerStatsMessageEmbed.RpsPlayerStats(playerStats, user).Build());
             }
         }
     }

@@ -1,7 +1,5 @@
 ﻿using CoMiniGameBots.Message_Building;
 using CoMiniGameBots.MiniGames.RockPaperScissors;
-using CoMiniGameBots.Objects;
-using CoMiniGameBots.Static_Data;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -9,6 +7,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using DiscordNetHelperLibrary.Constants;
 
 namespace CoMiniGameBots
 {
@@ -16,7 +15,7 @@ namespace CoMiniGameBots
     {
         private DiscordSocketClient Client;
         private CommandService Commands;
-        private static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
+        private static void Main() => new Program().MainAsync().GetAwaiter().GetResult();
 
         private async Task MainAsync()
         {
@@ -39,8 +38,7 @@ namespace CoMiniGameBots
             Client.Ready += Client_Ready;
             Client.Log += Log;
 
-            var token = BotToken.Token;
-            await Client.LoginAsync(TokenType.Bot, token);
+            await Client.LoginAsync(TokenType.Bot, ApiAccessKeys.MiniGamesKey);
             await Client.StartAsync();
             await Task.Delay(-1);
         }
@@ -70,9 +68,10 @@ namespace CoMiniGameBots
             if (!result.IsSuccess)
                 Console.WriteLine($"{DateTime.Now} at Commands] Something went wrong with executing command. Text: {context.Message.Content} | Error: {result.ErrorReason}");
         }
+
         private async Task Client_Ready()
         {
-            await Client.SetGameAsync("!rpshelp for details!", "https://discordapp.com/developers", ActivityType.Playing);
+            await Client.SetGameAsync("!rpshelp for details!", "https://discordapp.com/developers", ActivityType.Watching);
         }
 
         /// <summary>
@@ -87,6 +86,7 @@ namespace CoMiniGameBots
         {
             return RpsGameManager.ActiveGames.Any(activeGame => activeGame.POne.User.Id == user.Id || activeGame.PTwo.User.Id == user.Id);
         }
+
         /// <summary>
         /// Logic that checks a users message and we determine if the answer is for Rock Paper Scissors. If the message is acceptable, we head into the RPS game(s). 
         /// </summary>

@@ -1,5 +1,4 @@
-﻿using CoMiniGameBots.Static_Data;
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using System.Threading.Tasks;
 using CoMiniGameBots.MiniGames.RockPaperScissors;

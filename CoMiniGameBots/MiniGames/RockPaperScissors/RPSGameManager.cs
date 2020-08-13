@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using CoMiniGameBots.Exceptions;
 using CoMiniGameBots.MiniGames.RockPaperScissors.Stats;
 using CoMiniGameBots.Objects;
-using CoMiniGameBots.Static_Data;
 using Discord;
 using Discord.WebSocket;
 using CoMiniGameBots.Extensions;

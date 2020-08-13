@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using CoMiniGameBots.Message_Building;
+﻿using CoMiniGameBots.Message_Building;
 using CoMiniGameBots.MiniGames.RockPaperScissors;
 using Discord;
 using Discord.Commands;
@@ -57,8 +55,8 @@ namespace CoMiniGameBots.Commands
         /// <param name="P2"></param>
         private static async void MessagePlayers(IUser P1, IUser P2)
         {
-            await P1.SendMessageAsync(null, false, RPSGameInstructionsMessageEmbed.RPSChallengingPlayerInstructions(P2).Build());
-            await P2.SendMessageAsync(null, false, RPSGameInstructionsMessageEmbed.RPSChallengedPlayerInstructions(P1).Build());
+            await P1.SendMessageAsync(null, false, RpsGameInstructionsMessageEmbed.RpsChallengingPlayerInstructions(P2).Build());
+            await P2.SendMessageAsync(null, false, RpsGameInstructionsMessageEmbed.RpsChallengedPlayerInstructions(P1).Build());
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using CoMiniGameBots.MiniGames.RockPaperScissors;
 using CoMiniGameBots.Objects;
-using CoMiniGameBots.Static_Data;
 
 namespace CoMiniGameBots.Extensions
 {
