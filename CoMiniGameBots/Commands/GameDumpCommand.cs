@@ -1,66 +1,38 @@
 ﻿using CoMiniGameBots.Static_Data;
 using Discord;
 using Discord.Commands;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using CoMiniGameBots.MiniGames.RockPaperScissors;
 
 namespace CoMiniGameBots.Commands
 {
     public class GameDumpCommand : ModuleBase<SocketCommandContext>
     {
-        private readonly ulong OwnerID = 129804455964049408;
+        private const ulong OwnerId = 129804455964049408;
+
         [Command("rpsdump")]
         public async Task GetGames()
         {
-            IUser User = Context.User;
-            if (User.Id == OwnerID)
+            IUser user = Context.User;
+            if (user.Id == OwnerId)
             {
-                int count = 0;
-                foreach (var item in RPSStaticGameLists.ActiveGames)
+                var count = 0;
+                if (RpsGameManager.ActiveGames.Count > 0)
                 {
-                    count++;
-                    EmbedBuilder Debug = new EmbedBuilder();
-                    Debug.Title = $"{count}) Game";
-                    Debug.Description = $"{item.IsActive.ToString()}";
-                    Debug.AddField("Player 1 Username: ", $"{item.POne.User.Username}");
-                    if (item.POne.Choice != null)
+                    foreach (var item in RpsGameManager.ActiveGames)
                     {
-                        Debug.AddField("Player 1 Choice: ", item.POne.Choice);
+                        count++;
+                        var debug = new EmbedBuilder {Title = $"{count}) Game"};
+                        debug.AddField("Player 1 Username: ", $"{item.POne.User.Username}");
+                        debug.AddField("Player 1 Choice: ", item.POne.Choice ?? "null");
+                        debug.AddField("Player 2 Username: ", $"{item.PTwo.User.Username}");
+                        debug.AddField("Player 2 Choice: ", item.PTwo.Choice ?? "null");
+                        await Context.Channel.SendMessageAsync(null, false, debug.Build());
                     }
-                    else
-                    {
-                        Debug.AddField("Player 1 Choice: ", "null");
-                    }
-                    Debug.AddField("Player 2 Username: ", $"{item.PTwo.User.Username}");
-                    if (item.PTwo.Choice != null)
-                    {
-                        Debug.AddField("Player 2 Choice: ", item.PTwo.Choice);
-                    }
-                    else
-                    {
-                        Debug.AddField("Player 2 Choice: ", "null");
-                    }
-                    await Context.Channel.SendMessageAsync(null, false, Debug.Build());
                 }
-
-                count = 0;
-                foreach (var item in RPSStaticGameLists.ActiveQueue)
+                else
                 {
-                    count++;
-                    EmbedBuilder Debug = new EmbedBuilder();
-                    Debug.Title = $"{count}) Queued Player";
-                    Debug.AddField("Player Username: ", $"{item.User.Username}");
-                    if (item.Choice != null)
-                    {
-                        Debug.AddField("Player Choice: ", item.Choice);
-                    }
-                    else
-                    {
-                        Debug.AddField("Player Choice: ", "null");
-                    }
-                    await Context.Channel.SendMessageAsync(null, false, Debug.Build());
+                    await Context.Channel.SendMessageAsync($"No active games.");
                 }
             }
             else

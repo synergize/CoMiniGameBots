@@ -6,16 +6,17 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
 namespace CoMiniGameBots
 {
-    class Program
+    internal class Program
     {
         private DiscordSocketClient Client;
         private CommandService Commands;
-        static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
+        private static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
 
         private async Task MainAsync()
         {
@@ -38,13 +39,13 @@ namespace CoMiniGameBots
             Client.Ready += Client_Ready;
             Client.Log += Log;
 
-            string Token = BotToken.Token;
-            await Client.LoginAsync(TokenType.Bot, Token);
+            var token = BotToken.Token;
+            await Client.LoginAsync(TokenType.Bot, token);
             await Client.StartAsync();
             await Task.Delay(-1);
         }
 
-        private Task Log(LogMessage msg)
+        private static Task Log(LogMessage msg)
         {
             Console.WriteLine(msg.Message);
             return Task.CompletedTask;
@@ -52,57 +53,39 @@ namespace CoMiniGameBots
 
         private async Task Client_MessageRecieved(SocketMessage MessageParam)
         {
-            var Message = MessageParam as SocketUserMessage;
-            var Context = new SocketCommandContext(Client, Message);
+            var message = MessageParam as SocketUserMessage;
+            var context = new SocketCommandContext(Client, message);
             
-            if (Context.Message == null || Context.Message.Content == "") return;
-            if (Context.User.IsBot) return;
+            if (context.Message == null || context.Message.Content == "") return;
+            if (context.User.IsBot) return;
 
             
-            await FilterRPSReplies(Message, Context); // Checking Rock Paper Scissors replies.
+            await FilterRpsReplies(message, context); // Checking Rock Paper Scissors replies.
 
 
-            int ArgPos = 0;
-            if (!(Message.HasCharPrefix('!', ref ArgPos) || Message.HasMentionPrefix(Client.CurrentUser, ref ArgPos))) return;
+            var argPos = 0;
+            if (!(message.HasCharPrefix('!', ref argPos) || message.HasMentionPrefix(Client.CurrentUser, ref argPos))) return;
 
-            var Result = await Commands.ExecuteAsync(Context, ArgPos, null);
-            if (!Result.IsSuccess)
-                Console.WriteLine($"{DateTime.Now} at Commands] Something went wrong with executing command. Text: {Context.Message.Content} | Error: {Result.ErrorReason}");
+            var result = await Commands.ExecuteAsync(context, argPos, null);
+            if (!result.IsSuccess)
+                Console.WriteLine($"{DateTime.Now} at Commands] Something went wrong with executing command. Text: {context.Message.Content} | Error: {result.ErrorReason}");
         }
         private async Task Client_Ready()
         {
             await Client.SetGameAsync("!rpshelp for details!", "https://discordapp.com/developers", ActivityType.Playing);
         }
 
-        //If someone adds a reaction, run x code. 
-        private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel Channel, SocketReaction Reaction)
-        {
-            //If a bot sends the reaction, disregard. 
-            if (((SocketUser)Reaction.User).IsBot) return;
-        }
-
         /// <summary>
         /// Checks passes in the user sending a message to see if they're in an active game.
         /// </summary>
         /// <param name="user"></param>
-        /// <see cref="RPSStaticGameLists.ActiveGames"/>
+        /// <see cref="RpsGameManager.ActiveGames"/>
         /// <returns> 
         /// Returns trueif they're in an active game. 
         /// </returns>
-        private bool CheckGames(IUser user)
+        private static bool CheckGames(IUser user)
         {
-            foreach (var ActiveGame in RPSStaticGameLists.ActiveGames)
-            {
-                if (ActiveGame.POne.User.Id == user.Id || ActiveGame.PTwo.User.Id == user.Id)
-                {
-                    if (ActiveGame.IsActive)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return RpsGameManager.ActiveGames.Any(activeGame => activeGame.POne.User.Id == user.Id || activeGame.PTwo.User.Id == user.Id);
         }
         /// <summary>
         /// Logic that checks a users message and we determine if the answer is for Rock Paper Scissors. If the message is acceptable, we head into the RPS game(s). 
@@ -110,34 +93,33 @@ namespace CoMiniGameBots
         /// <param name="Message"></param>
         /// <param name="Context"></param>
         /// <returns></returns>
-        private async Task FilterRPSReplies(SocketUserMessage Message, SocketCommandContext Context)
+        private static async Task FilterRpsReplies(IMessage Message, SocketCommandContext Context)
         {
-            string RPSCheck = Message.Content.ToLower().Trim();
-            if (RPSCheck == "!rock" || RPSCheck == "!paper" || RPSCheck == "!scissors")
+            var rpsCheck = Message.Content.ToLower().Trim();
+            if (rpsCheck == "!rock" || rpsCheck == "!paper" || rpsCheck == "!scissors")
             {
                 if (Context.Guild != null)
                 {
                     await Message.DeleteAsync();
-                    await Context.Channel.SendMessageAsync($"{Context.User.Mention} Please send your play directly to me. I've deleted your message for safety!", false, null);
-                    return;
+                    await Context.Channel.SendMessageAsync($"{Context.User.Mention} Please send your play directly to me in the future. I've deleted your message for safety, but your choice has been recorded!");
                 }
 
                 if (!CheckGames(Context.User))
                 {
                     await Context.Channel.SendMessageAsync(null, false,
-                        PlayerNoActiveGamesEmbed.RPSPlayerNeeded(Context.User).Build());
+                        PlayerNoActiveGamesEmbed.RpsNoActiveGameEmbed(Context.User).Build());
                     return;
                 }
-                RPSGameRun Entry = new RPSGameRun();
-                DetermineMessageMain PlayerMessage = new DetermineMessageMain();
-                RPSGameObject Results = Entry.GetPlayerEntry(Context.User, RPSCheck);
-                if (Results.IsRandom)
+                var entry = new RpsGameManager();
+                var playerMessage = new DetermineMessageMain();
+                var results = entry.GetPlayerEntry(Context.User, rpsCheck);
+                if (results.IsRandom)
                 {
-                    await PlayerMessage.SendRandomMessageAsync(Results, Context);
+                    await playerMessage.SendRandomMessageAsync(results, Context);
                 }
                 else
                 {
-                    await PlayerMessage.SendChallengedMessageAsync(Results, Context);
+                    await playerMessage.SendChallengedMessageAsync(results, Context);
                 }
 
             }

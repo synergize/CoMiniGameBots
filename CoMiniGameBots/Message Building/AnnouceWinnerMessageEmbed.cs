@@ -8,7 +8,7 @@ namespace CoMiniGameBots.Message_Building
 {
     static class AnnouceWinnerMessageEmbed
     {
-        public static EmbedBuilder RPSWinner(RPSPlayerGameObject winner, RPSPlayerGameObject loser)
+        public static EmbedBuilder RPSWinner(RpsPlayerGameObject winner, RpsPlayerGameObject loser)
         {
             EmbedBuilder RPSBuilder = new EmbedBuilder();
             RPSBuilder.Title = "We've found a winner!";

@@ -1,72 +1,59 @@
 ﻿using CoMiniGameBots.Objects;
-using CoMiniGameBots.Static_Data;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
 {
-    class PopulateStatObject
+    internal class PopulateStatObject
     {
 
-        public List<RPSPlayerStatsDataModel> SetPlayerStats(List<RPSGameObject> listOfGames)
+        public List<RpsPlayerStatsDataModel> SetPlayerStats(RpsGameObject concludedGame)
         {
-            var listStats = new List<RPSPlayerStatsDataModel>();
-            var activeGame = listOfGames.FindAll(x => x.IsActive == false);
-
-            for (var i = 0; i < activeGame.Count; i++)
+            var listStats = new List<RpsPlayerStatsDataModel>();
+            var p1 = new RpsPlayerStatsDataModel
             {
-                var game = activeGame[i];
+                Stats = new RpsPlayerStatsDataModel.PlayerStats()
+            };
 
-                    var p1 = new RPSPlayerStatsDataModel
-                    {
-                        Stats = new RPSPlayerStatsDataModel.PlayerStats()
-                    };
-                    var p2 = new RPSPlayerStatsDataModel
-                    {
-                        Stats = new RPSPlayerStatsDataModel.PlayerStats()
-                    };
+            var p2 = new RpsPlayerStatsDataModel
+            {
+                Stats = new RpsPlayerStatsDataModel.PlayerStats()
+            };
 
-                    p1 = SetPlayerInfo(game.POne, p1);
-                    p1 = SetPlayerStatChoices(game.POne, p1);
+            p1 = SetPlayerInfo(concludedGame.POne, p1);
+            p1 = SetPlayerStatChoices(concludedGame.POne, p1);
 
-                    if (!SetDraw(game))
-                    {
-                        p1 = SetWinLoss(game.POne, p1);
-                        p2 = SetWinLoss(game.PTwo, p2);
-                    }
-                    else
-                    {
-                        p1.Stats.NumberDraws += 1;
-                        p2.Stats.NumberDraws += 1;
-                    }
-
-                    p2 = SetPlayerInfo(game.PTwo, p2);
-                    p2 = SetPlayerStatChoices(game.PTwo, p2);
-
-                    listStats.Add(p1);
-                    listStats.Add(p2);
-
-                    RPSStaticGameLists.ActiveGames.Remove(game);
-                
-
+            if (!SetDraw(concludedGame))
+            {
+                p1 = SetWinLoss(concludedGame.POne, p1);
+                p2 = SetWinLoss(concludedGame.PTwo, p2);
             }
+            else
+            {
+                p1.Stats.NumberDraws += 1;
+                p2.Stats.NumberDraws += 1;
+            }
+
+            p2 = SetPlayerInfo(concludedGame.PTwo, p2);
+            p2 = SetPlayerStatChoices(concludedGame.PTwo, p2);
+
+            listStats.Add(p1);
+            listStats.Add(p2);
 
             return listStats;
         }
 
-        public RPSPlayerStatsDataModel ConvertToPlayerStatModel(RPSPlayerGameObject GameObj)
+        public RpsPlayerStatsDataModel ConvertToPlayerStatModel(RpsPlayerGameObject GameObj)
         {
-            var stats = new RPSPlayerStatsDataModel
+            var stats = new RpsPlayerStatsDataModel
             {
-                DiscordID = GameObj.User.Id,
+                DiscordId = GameObj.User.Id,
                 Name = GameObj.User.Username
             };
             return stats;
         }
 
 
-        private RPSPlayerStatsDataModel SetPlayerStatChoices(RPSPlayerGameObject player, RPSPlayerStatsDataModel stats)
+        private static RpsPlayerStatsDataModel SetPlayerStatChoices(RpsPlayerGameObject player, RpsPlayerStatsDataModel stats)
         {
             switch (player.Choice)
             {
@@ -84,25 +71,20 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors.Stats
             }
         }
 
-        private RPSPlayerStatsDataModel SetPlayerInfo(RPSPlayerGameObject player, RPSPlayerStatsDataModel stats)
+        private static RpsPlayerStatsDataModel SetPlayerInfo(RpsPlayerGameObject player, RpsPlayerStatsDataModel stats)
         {
-            stats.DiscordID = player.User.Id;
+            stats.DiscordId = player.User.Id;
             stats.Name = player.User.Username;
 
             return stats;
         }
 
-        private bool SetDraw(RPSGameObject player)
+        private static bool SetDraw(RpsGameObject player)
         {
-            if (!player.POne.IsWinner && !player.PTwo.IsWinner)
-            {
-                return true;
-            }
-
-            return false;
+            return !player.POne.IsWinner && !player.PTwo.IsWinner;
         }
 
-        private RPSPlayerStatsDataModel SetWinLoss(RPSPlayerGameObject player, RPSPlayerStatsDataModel stats)
+        private static RpsPlayerStatsDataModel SetWinLoss(RpsPlayerGameObject player, RpsPlayerStatsDataModel stats)
         {
             if (player.IsWinner)
             {

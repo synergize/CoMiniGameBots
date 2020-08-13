@@ -8,7 +8,7 @@ namespace CoMiniGameBots.Message_Building
 {
     static class PlayerStatsMessageEmbed
     {
-        public static EmbedBuilder RPSPlayerStats(RPSPlayerStatsDataModel stats, IUser user)
+        public static EmbedBuilder RPSPlayerStats(RpsPlayerStatsDataModel stats, IUser user)
         {
             EmbedBuilder RPSBuilder = new EmbedBuilder();
             RPSBuilder.Title = "Rock Paper Scissors Stats!";
@@ -24,7 +24,7 @@ namespace CoMiniGameBots.Message_Building
 
             return RPSBuilder;
         }
-        private static string BuildCustomMessage(RPSPlayerStatsDataModel stats)
+        private static string BuildCustomMessage(RpsPlayerStatsDataModel stats)
         {
             var Rocks = stats.Stats.NumberRocks;
             var Paper = stats.Stats.NumberPaper;
