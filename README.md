@@ -16,6 +16,7 @@ Currently not being distributed.
 
 ## Current To-Add List
 - BattleShip (not even planning stages)
+- tic-tac-toe
 - Other various text-based games.
 
 ## Usage
