@@ -20,6 +20,7 @@ namespace CoMiniGameBots.Message_Building
 
             return rpsBuilder;
         }
+
         public static EmbedBuilder RpsChallengingPlayerInstructions(IUser Challenged)
         {
             var rpsBuilder = new EmbedBuilder

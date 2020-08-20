@@ -13,6 +13,7 @@ namespace CoMiniGameBots.Objects
 
         }
         public string Choice { get; set; }
+        public int InProgressWins { get; set; }
 
         public IUser User => GuildUser;
 

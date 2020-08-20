@@ -98,30 +98,40 @@ namespace CoMiniGameBots
             var rpsCheck = Message.Content.ToLower().Trim();
             if (rpsCheck == "!rock" || rpsCheck == "!paper" || rpsCheck == "!scissors")
             {
-                if (Context.Guild != null)
-                {
-                    await Message.DeleteAsync();
-                    await Context.Channel.SendMessageAsync($"{Context.User.Mention} Please send your play directly to me in the future. I've deleted your message for safety, but your choice has been recorded!");
-                }
-
                 if (!CheckGames(Context.User))
                 {
                     await Context.Channel.SendMessageAsync(null, false,
                         PlayerNoActiveGamesEmbed.RpsNoActiveGameEmbed(Context.User).Build());
                     return;
                 }
+
+                if (Context.Guild != null)
+                {
+                    await Message.DeleteAsync();
+                    await Context.Channel.SendMessageAsync($"{Context.User.Mention} Please send your play directly to me in the future. I've deleted your message for safety, but your choice has been recorded!");
+                }
+
                 var entry = new RpsGameManager();
                 var playerMessage = new DetermineMessageMain();
                 var results = entry.GetPlayerEntry(Context.User, rpsCheck);
-                if (results.IsRandom)
+                //if (results.IsRandom)
+                //{
+                //    await playerMessage.SendRandomMessageAsync(results, Context);
+                //}
+                //else
+                //{
+                //    await playerMessage.SendChallengedMessageAsync(results, Context);
+                //}
+
+                if (results.TotalWins >= 3)
                 {
-                    await playerMessage.SendRandomMessageAsync(results, Context);
+                    entry.EndGame(results);
                 }
                 else
                 {
+                    await Context.User.SendMessageAsync(embed: BestOfThreeContinuationMessageEmbed.ContinuePlayingMessageEmbed(results, Context.User).Build());
                     await playerMessage.SendChallengedMessageAsync(results, Context);
                 }
-
             }
         }
     }

@@ -50,12 +50,12 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
         {
             var currentEntry = ActiveGames.Find(x => x.POne.User.Id == user.Id || x.PTwo.User.Id == user.Id);
 
-            if (currentEntry.POne.User.Id == user.Id && currentEntry.POne.Choice == null)
+            if (currentEntry.POne.User.Id == user.Id)
             {
                 currentEntry.POne.Choice = play;
                 return IsWinner(currentEntry);
             }
-            if (currentEntry.PTwo.User.Id == user.Id && currentEntry.PTwo.Choice == null)
+            if (currentEntry.PTwo.User.Id == user.Id)
             {
                 currentEntry.PTwo.Choice = play;
                 return IsWinner(currentEntry);
@@ -72,15 +72,10 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
         {
             if (game.PTwo.Choice != null && game.POne.Choice != null)
             {
-                var save = new StatJsonController();
-                var populate = new PopulateStatObject();
                 var winner = DetermineWinner(game);
-                winner.RemoveGame();
-                save.SaveStatsJson(populate.SetPlayerStats(winner));
                 return winner;
             }
             return game;
-            
         }
 
         /// <summary>
@@ -97,15 +92,26 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
                 game.PTwo.IsWinner = false;
                 return game;
             }
+
+            game.TotalWins++;
+
             if (game.POne.Choice == "!scissors" && game.PTwo.Choice == "!paper" ||
                 game.POne.Choice == "!paper" && game.PTwo.Choice == "!rock" ||
                 game.POne.Choice == "!rock" && game.PTwo.Choice == "!scissors")
             {
-                game.POne.IsWinner = true;
+                game.POne.InProgressWins++;
+                if (game.POne.InProgressWins > 1)
+                {
+                    game.POne.IsWinner = true;
+                }
                 return game;
             }
 
-            game.PTwo.IsWinner = true;
+            game.PTwo.InProgressWins++;
+            if (game.PTwo.InProgressWins > 1)
+            {
+                game.PTwo.IsWinner = true;
+            }
             return game;
         }
 
@@ -170,6 +176,16 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
             }
 
             throw new GameNotExpiredException($"{game.POne.User.Username} and {game.PTwo.User.Username} are battling it out. Their game started at {game.StartTime:hh:mm:ss} UTC, it will expire in {timeLeft.Minutes} minutes and {timeLeft.Seconds} seconds or if someone wins.");
+        }
+
+        public RpsGameObject EndGame(RpsGameObject game)
+        {
+            var save = new StatJsonController();
+            var populate = new PopulateStatObject();
+
+            game.RemoveGame();
+            save.SaveStatsJson(populate.SetPlayerStats(game));
+            return game;
         }
     }
 }

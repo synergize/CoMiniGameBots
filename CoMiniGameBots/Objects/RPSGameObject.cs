@@ -25,6 +25,7 @@ namespace CoMiniGameBots.Objects
 
         public RpsPlayerGameObject POne { get; }
         public RpsPlayerGameObject PTwo { get; }
+        public int TotalWins { get; set; }
         public ISocketMessageChannel GameChannel { get; }
 
         public DateTime StartTime { get; }
