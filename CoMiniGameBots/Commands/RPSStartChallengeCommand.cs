@@ -14,12 +14,13 @@ namespace CoMiniGameBots.Commands
         /// </summary>
         /// <param name="p2"></param>
         /// <returns></returns>
-        [Command("rpschallenge")]
+        [Command("challenge")]
         public async Task RockPaperScissorsChallengeStart(IUser p2)
         {
             var p1 = Context.User;  
             if (p1.Id == p2.Id)
             {
+                await Context.Channel.SendMessageAsync($"{p1.Mention} you can't challenge yourself. That's cheating. I'm telling mom!");
                 return;
             }
 

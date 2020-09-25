@@ -1,4 +1,5 @@
-﻿using CoMiniGameBots.MiniGames.RockPaperScissors;
+﻿using System.Runtime.InteropServices;
+using CoMiniGameBots.MiniGames.RockPaperScissors;
 using CoMiniGameBots.Objects;
 
 namespace CoMiniGameBots.Extensions
@@ -7,13 +8,13 @@ namespace CoMiniGameBots.Extensions
     {
         public static RpsGameObject InitializeGame(this RpsGameObject game)
         {
-            RpsGameManager.ActiveGames.Add(game);
+            RpsGameManager.ActiveGames.TryAdd(game.POne.User.Id, game);
             return game;
         }
 
         public static void RemoveGame(this RpsGameObject game)
         {
-            RpsGameManager.ActiveGames.Remove(game);
+            RpsGameManager.ActiveGames.TryRemove(game.PTwo.User.Id, out var removedGameObject);
         }
     }
 }

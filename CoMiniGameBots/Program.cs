@@ -5,48 +5,22 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
+using DiscordNetHelperLibrary;
 using DiscordNetHelperLibrary.Constants;
 
 namespace CoMiniGameBots
 {
-    internal class Program
+    internal class Program : DiscordBotBase
     {
-        private DiscordSocketClient Client;
-        private CommandService Commands;
         private static void Main() => new Program().MainAsync().GetAwaiter().GetResult();
 
         private async Task MainAsync()
         {
-
-            Client = new DiscordSocketClient(new DiscordSocketConfig
-            {
-                LogLevel = LogSeverity.Debug
-            });
-
-            Commands = new CommandService(new CommandServiceConfig
-            {
-                CaseSensitiveCommands = true,
-                DefaultRunMode = RunMode.Async,
-                LogLevel = LogSeverity.Debug
-
-            });
-
+            await MainAsync(ApiAccessKeys.MiniGamesKey);
             Client.MessageReceived += Client_MessageRecieved;
-            await Commands.AddModulesAsync(Assembly.GetEntryAssembly(), null);
             Client.Ready += Client_Ready;
-            Client.Log += Log;
-
-            await Client.LoginAsync(TokenType.Bot, ApiAccessKeys.MiniGamesKey);
-            await Client.StartAsync();
             await Task.Delay(-1);
-        }
-
-        private static Task Log(LogMessage msg)
-        {
-            Console.WriteLine(msg.Message);
-            return Task.CompletedTask;
         }
 
         private async Task Client_MessageRecieved(SocketMessage MessageParam)
@@ -57,12 +31,17 @@ namespace CoMiniGameBots
             if (context.Message == null || context.Message.Content == "") return;
             if (context.User.IsBot) return;
 
-            
+            if (context.Message.Content.Contains("!rps"))
+            {
+                await context.Channel.SendMessageAsync("Command structure has change! Please make sure to do rps!<command>. Example: rps!challenge @user");
+                return;
+            }
+
             await FilterRpsReplies(message, context); // Checking Rock Paper Scissors replies.
 
 
             var argPos = 0;
-            if (!(message.HasCharPrefix('!', ref argPos) || message.HasMentionPrefix(Client.CurrentUser, ref argPos))) return;
+            if (!(message.HasStringPrefix("rps!", ref argPos) || message.HasMentionPrefix(Client.CurrentUser, ref argPos))) return;
 
             var result = await Commands.ExecuteAsync(context, argPos, null);
             if (!result.IsSuccess)
@@ -84,7 +63,7 @@ namespace CoMiniGameBots
         /// </returns>
         private static bool CheckGames(IUser user)
         {
-            return RpsGameManager.ActiveGames.Any(activeGame => activeGame.POne.User.Id == user.Id || activeGame.PTwo.User.Id == user.Id);
+            return RpsGameManager.ActiveGames.Any(activeGame => activeGame.Value.POne.User.Id == user.Id || activeGame.Value.PTwo.User.Id == user.Id);
         }
 
         /// <summary>

@@ -6,7 +6,7 @@ namespace CoMiniGameBots.Commands
 {
    public class RpsHelpCommand : ModuleBase<SocketCommandContext>
     {
-        [Command("rpshelp")]
+        [Command("help")]
         public async Task RpsHelp()
         {
             await Context.Channel.SendMessageAsync(null, false, RpsHelpEmbed.RpsHelp().Build());
