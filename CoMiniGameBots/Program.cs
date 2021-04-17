@@ -18,14 +18,15 @@ namespace CoMiniGameBots
         private async Task MainAsync()
         {
             await MainAsync(ApiAccessKeys.MiniGamesKey);
+            await Commands.AddModulesAsync(typeof(Program).Assembly, null);
             Client.MessageReceived += Client_MessageRecieved;
             Client.Ready += Client_Ready;
             await Task.Delay(-1);
         }
 
-        private async Task Client_MessageRecieved(SocketMessage MessageParam)
+        private async Task Client_MessageRecieved(SocketMessage messageParam)
         {
-            var message = MessageParam as SocketUserMessage;
+            if (!(messageParam is SocketUserMessage message)) return;
             var context = new SocketCommandContext(Client, message);
             
             if (context.Message == null || context.Message.Content == "") return;
@@ -33,7 +34,7 @@ namespace CoMiniGameBots
 
             if (context.Message.Content.Contains("!rps"))
             {
-                await context.Channel.SendMessageAsync("Command structure has change! Please make sure to do rps!<command>. Example: rps!challenge @user");
+                await context.Channel.SendMessageAsync("Command structure has changed! Please make sure to do rps!<command>. Example: rps!challenge @user");
                 return;
             }
 
@@ -50,7 +51,7 @@ namespace CoMiniGameBots
 
         private async Task Client_Ready()
         {
-            await Client.SetGameAsync("!rpshelp for details!", "https://discordapp.com/developers", ActivityType.Watching);
+            await Client.SetGameAsync("rps!help for details!", "https://discordapp.com/developers", ActivityType.Watching);
         }
 
         /// <summary>
