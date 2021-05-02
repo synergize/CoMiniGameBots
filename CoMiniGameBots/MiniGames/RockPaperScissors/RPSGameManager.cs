@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using CoMiniGameBots.Exceptions;
 using CoMiniGameBots.MiniGames.RockPaperScissors.Stats;
 using CoMiniGameBots.Objects;
@@ -11,7 +13,7 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
 {
     internal class RpsGameManager
     {
-        public static List<RpsGameObject> ActiveGames { get; set; } = new List<RpsGameObject>();
+        public static ConcurrentDictionary<ulong, RpsGameObject> ActiveGames { get; set; } = new ConcurrentDictionary<ulong, RpsGameObject>();
 
         /// <summary>
         /// Kicks off an instance of the game when a player is challenged by another player. We use <see cref="IUser"/> to store both player's Discord Name and Discord unique ID. 
@@ -48,7 +50,7 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
         /// </returns>
         public RpsGameObject GetPlayerEntry(IUser user, string play)
         {
-            var currentEntry = ActiveGames.Find(x => x.POne.User.Id == user.Id || x.PTwo.User.Id == user.Id);
+            var currentEntry = ActiveGames.Values.ToList().Find(x => x.POne.User.Id == user.Id || x.PTwo.User.Id == user.Id);
 
             if (currentEntry.POne.User.Id == user.Id && currentEntry.POne.Choice == null)
             {
@@ -131,29 +133,18 @@ namespace CoMiniGameBots.MiniGames.RockPaperScissors
         /// <returns></returns>
         public static bool CheckIfPlayerPlaying(IUser player)
         {
-            var isPlaying = false;
-            var p1Game = ActiveGames.Find(x => x.POne.User == player);
-            var p2Game = ActiveGames.Find(x => x.PTwo.User == player);
+            var result = ActiveGames.TryGetValue(player.Id, out var activeGame);
 
-            if (p1Game != null)
-            {
-                isPlaying = true;
-            }
-
-            if (p2Game != null)
-            {
-                isPlaying = true;
-            }
-            return isPlaying;
+            return result;
         }
 
         public static void DetermineAndRemoveInactiveGames(IUser opponent, IUser challenger)
         {
-            var p1Game = ActiveGames.Find(x => x.POne.User == opponent || x.PTwo.User == opponent);
+            var p1Game = ActiveGames.TryGetValue(opponent.Id, out var activeGame);
 
-            if (p1Game != null)
+            if (p1Game && activeGame != null)
             {
-                RemoveInactiveGame(p1Game, challenger);
+                RemoveInactiveGame(activeGame, challenger);
             }
         }
 

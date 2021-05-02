@@ -8,7 +8,7 @@ namespace CoMiniGameBots.Commands
 {
     public class RpsGetStatsCommand : ModuleBase<SocketCommandContext>
     {
-        [Command("rpsstats")]
+        [Command("stats")]
         public async Task GetPlayerStats()
         {
             IUser user = Context.User;
